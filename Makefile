@@ -6,7 +6,7 @@
 #    By: jhogonca <jhogonca@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/11 05:46:56 by jhogonca          #+#    #+#              #
-#    Updated: 2023/06/11 06:05:43 by jhogonca         ###   ########.fr        #
+#    Updated: 2023/06/17 23:53:28 by jhogonca         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@
 NAME = fdf
 
 SRC_DIR = ./minilibft
-MLX_DIR = minilibx
+MLX_DIR = ./minilibx
 
 SRC_FILES = ft_printf.c get_next_line.c ft_split.c
 MLX_FILES = libmlx.a
@@ -25,8 +25,8 @@ OBJS = $(SRCS:.c=.o)
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror
-LDFLAGS = -L$(MLX_DIR) -lmlx -lXext -lX11
+CFLAGS = 
+LDFLAGS = -L$(MLX_DIR) -lmlx -lX11 -lXext
 INCLUDES = -Iincludes -I$(MLX_DIR)
 
 all: $(NAME)

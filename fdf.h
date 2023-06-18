@@ -6,7 +6,7 @@
 /*   By: jhogonca <jhogonca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 00:31:27 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/06/11 06:00:42 by jhogonca         ###   ########.fr       */
+/*   Updated: 2023/06/18 00:13:14 by jhogonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdarg.h>
+#include "minilibx/mlx.h"
 
 typedef struct s_line
 {

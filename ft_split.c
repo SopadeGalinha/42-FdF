@@ -6,11 +6,11 @@
 /*   By: jhogonca <jhogonca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 01:47:10 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/06/11 06:00:30 by jhogonca         ###   ########.fr       */
+/*   Updated: 2023/06/18 00:15:51 by jhogonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/fdf.h"
+#include "fdf.h"
 
 int	count_words(char const *s, char c)
 {

@@ -6,11 +6,11 @@
 /*   By: jhogonca <jhogonca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 01:33:10 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/06/11 06:00:03 by jhogonca         ###   ########.fr       */
+/*   Updated: 2023/06/18 00:00:03 by jhogonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"../includes/fdf.h"
+#include "fdf.h"
 
 static void	ft_putchar(int fd, const char c, t_data *st)
 {

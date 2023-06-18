@@ -6,11 +6,11 @@
 /*   By: jhogonca <jhogonca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 00:30:33 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/06/11 01:21:45 by jhogonca         ###   ########.fr       */
+/*   Updated: 2023/06/17 23:57:03 by jhogonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/fdf.h"
+#include "fdf.h"
 
 static char	*get_line(char *line, char *buffer, long size_buffer, long *sz_line)
 {

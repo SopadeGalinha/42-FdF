@@ -6,12 +6,11 @@
 /*   By: jhogonca <jhogonca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 17:23:51 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/06/11 06:01:06 by jhogonca         ###   ########.fr       */
+/*   Updated: 2023/06/18 00:14:23 by jhogonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minilibx/mlx.h"
-#include "includes/fdf.h"
+#include "fdf.h"
 
 void	get_width_and_height(int fd, t_fdf *st)
 {
@@ -101,21 +100,17 @@ void	ft_read_map(char *file_name, t_fdf *st)
 int main(int ac, char **av)
 {
 	t_fdf	st;
-	void *mlx;
 
 	st.error = 0;
 	st.width = 0;
 	st.height = 0;
-	st.map = NULL;
-	st.mlx = NULL;
-	st.window = NULL;
+	
 	if (ac == 2)
-	{
+	{	
 		ft_read_map(av[1], &st);
-		exit(0);
 		st.mlx = mlx_init();
-		st.window = mlx_new_window(mlx, 500, 500, "mlx 42");
-		mlx_loop(mlx);
+		st.window = mlx_new_window(st.mlx, 500, 500, "mlx 42");
+		mlx_loop(st.mlx);
 	}
 	return (0);
 }
