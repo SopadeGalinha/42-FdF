@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fdf.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhogonca <jhogonca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jhogonca <jhogonca@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 00:31:27 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/06/18 00:13:14 by jhogonca         ###   ########.fr       */
+/*   Updated: 2023/07/16 01:56:48 by jhogonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,29 +18,8 @@
 #  define BUFFER_SIZE 13
 # endif
 
-# include <stdio.h>
-# include <fcntl.h>
-# include <unistd.h>
-# include <stdlib.h>
-# include <stdarg.h>
-#include "minilibx/mlx.h"
-
-typedef struct s_line
-{
-	char	*line;
-	long	size_line;
-	long	index;
-	long	size_buffer;
-}	t_line;
-
-typedef struct s_data
-{
-	int				count;
-	int				index;
-	long			pointer;
-	unsigned int	hex_ref;
-	char			*str;
-}	t_data;
+# include "./minilibx/mlx.h"
+# include "./libft/libft.h"
 
 typedef struct s_fdf
 {
@@ -51,11 +30,5 @@ typedef struct s_fdf
     void	*mlx;
     void	*window;
 }		t_fdf;
-
-char	*get_next_line(int fd);
-int 	count_words(char const *s, char c);
-int 	ft_printf(int fd, const char *fmt, ...);
-size_t	ft_strlen(char const *s);
-char	**ft_split(char const *s, char c);
 
 #endif

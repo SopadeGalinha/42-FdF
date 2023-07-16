@@ -3,13 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhogonca <jhogonca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jhogonca <jhogonca@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/06 17:23:51 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/06/18 00:14:23 by jhogonca         ###   ########.fr       */
+/*   Created: 2023/07/16 01:18:23 by jhogonca          #+#    #+#             */
+/*   Updated: 2023/07/16 04:16:39 by jhogonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+# include "../includes/fdf.h"
+
+int main(int ac, char **av)
+{	
+     void	*mlx;
+    void	*window;
+	if (ac == 2)
+	{	
+		//ft_read_map(av[1], &st);
+ 		mlx = mlx_init();
+
+		window = mlx_new_window(mlx, 500, 500, "mlx 42");
+		mlx_loop(mlx);
+        ft_atoi("123");
+        printf("Arg %s: ", av[1]);
+	}
+	return (0);
+}
+
+/*
 #include "fdf.h"
 
 void	get_width_and_height(int fd, t_fdf *st)
@@ -114,3 +134,4 @@ int main(int ac, char **av)
 	}
 	return (0);
 }
+*/

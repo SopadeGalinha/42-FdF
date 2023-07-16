@@ -1,50 +1,49 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: jhogonca <jhogonca@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/06/11 05:46:56 by jhogonca          #+#    #+#              #
-#    Updated: 2023/06/17 23:53:28 by jhogonca         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
-#.SILENT:
+.SILENT:
 
 NAME = fdf
 
-SRC_DIR = ./minilibft
-MLX_DIR = ./minilibx
+SRC_DIR = ./srcs
+MLX_DIR = ./includes/minilibx
+LIBFT_DIR = ./includes/libft
 
-SRC_FILES = ft_printf.c get_next_line.c ft_split.c
-MLX_FILES = libmlx.a
+SRC_FILES = main.c
+MLX_FILES = ./includes/libmlx.a
 
-SRCS = $(addprefix $(SRC_DIR)/, $(SRC_FILES)) main.c
+SRCS = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 OBJS = $(SRCS:.c=.o)
 
 CC = cc
 
-CFLAGS = 
-LDFLAGS = -L$(MLX_DIR) -lmlx -lX11 -lXext
-INCLUDES = -Iincludes -I$(MLX_DIR)
+CFLAGS = -Wall -Wextra -Werror -g
+
+LDFLAGS = -L$(MLX_DIR) -L$(LIBFT_DIR)
+LDLIBS = -lX11 -lXext -lmlx -lft
+INCLUDES = -Iincludes -I$(LIBFT_DIR)
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(LDFLAGS) $(INCLUDES) $(OBJS) -o $(NAME)
+	$(CC) $(LDFLAGS) $(OBJS) $(LDLIBS) -o $(NAME)
 
 $(SRC_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-main.o: main.c
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+$(LIBFT_DIR)/libft.a:
+	$(MAKE) -C $(LIBFT_DIR)
+
+$(MLX_DIR)/libmlx.a:
+	$(MAKE) -C $(MLX_DIR)
+
+$(OBJS): | $(LIBFT_DIR)/libft.a $(MLX_DIR)/libmlx.a
 
 clean:
 	rm -f $(OBJS)
+	$(MAKE) -C $(LIBFT_DIR) clean
+	$(MAKE) -C $(MLX_DIR) clean
 
 fclean: clean
 	rm -f $(NAME)
+	$(MAKE) -C $(LIBFT_DIR) fclean
 
 re: fclean all
 
