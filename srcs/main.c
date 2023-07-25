@@ -6,7 +6,7 @@
 /*   By: jhogonca <jhogonca@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 01:18:23 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/07/16 04:16:39 by jhogonca         ###   ########.fr       */
+/*   Updated: 2023/07/25 20:04:06 by jhogonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,18 @@
 
 int main(int ac, char **av)
 {	
-     void	*mlx;
-    void	*window;
-	if (ac == 2)
-	{	
-		//ft_read_map(av[1], &st);
- 		mlx = mlx_init();
+	void	*mlx;
+	void	*window;
+	if (ac != 2)
+		return (write(1, "Invalid number of arguments\n", 28));
+//	ft_initialization(&st);
+	mlx = mlx_init();
 
-		window = mlx_new_window(mlx, 500, 500, "mlx 42");
-		mlx_loop(mlx);
-        ft_atoi("123");
-        printf("Arg %s: ", av[1]);
-	}
+	window = mlx_new_window(mlx, 500, 500, "mlx 42");
+	mlx_loop(mlx);
+	ft_atoi("123");
+	printf("Arg %s: ", av[1]);
+
 	return (0);
 }
 
