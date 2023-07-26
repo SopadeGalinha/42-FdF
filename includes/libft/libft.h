@@ -24,6 +24,7 @@
 # include <stdlib.h>
 # include <stdarg.h>
 # include <stdio.h>
+# include <stdbool.h>
 
 
 /*_______________________________FUNCTIONS__________________________________*/

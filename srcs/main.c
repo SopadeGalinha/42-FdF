@@ -6,26 +6,39 @@
 /*   By: jhogonca <jhogonca@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 01:18:23 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/07/25 20:04:06 by jhogonca         ###   ########.fr       */
+/*   Updated: 2023/07/26 20:51:09 by jhogonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/fdf.h"
 
+void	error(char *str)
+{
+	if (str)
+		ft_putstr_fd(str, 2);
+	else
+		perror("Error");
+	exit(0);
+}
+
+void	set_map(t_fdf *fdf, char *file_name)
+{
+	printf("x: %d y: %d\n", fdf->coordinates->x, fdf->coordinates->x);
+}
+
 int main(int ac, char **av)
-{	
-	void	*mlx;
-	void	*window;
+{
+	t_fdf	fdf;
 	if (ac != 2)
-		return (write(1, "Invalid number of arguments\n", 28));
-//	ft_initialization(&st);
-	mlx = mlx_init();
+		error("Error: Invalid number of arguments\n");
+	fdf = (t_fdf) {0};
+	set_map(&fdf, av[1]);
+	return (0);
+	fdf.mlx = mlx_init();
 
-	window = mlx_new_window(mlx, 500, 500, "mlx 42");
-	mlx_loop(mlx);
-	ft_atoi("123");
+	fdf.window = mlx_new_window(fdf.mlx, 500, 500, "FDF");
+	mlx_loop(fdf.mlx);
 	printf("Arg %s: ", av[1]);
-
 	return (0);
 }
 
