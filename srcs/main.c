@@ -20,11 +20,12 @@ void	error(char *str)
 		perror("Error");
 	exit(0);
 }
-
+/*
 void	set_map(t_fdf *fdf, char *file_name)
 {
 	printf("x: %d y: %d\n", fdf->coordinates->x, fdf->coordinates->x);
 }
+*/
 
 int main(int ac, char **av)
 {
@@ -32,8 +33,8 @@ int main(int ac, char **av)
 	if (ac != 2)
 		error("Error: Invalid number of arguments\n");
 	fdf = (t_fdf) {0};
-	set_map(&fdf, av[1]);
-	return (0);
+	//set_map(&fdf, av[1]);
+	//return (0);
 	fdf.mlx = mlx_init();
 
 	fdf.window = mlx_new_window(fdf.mlx, 500, 500, "FDF");

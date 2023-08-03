@@ -34,7 +34,6 @@ typedef struct s_fdf
 	void	*window;
 	void	*mlx;
 	bool	error;
-	t_point	**coordinates;
 }		t_fdf;
 
 #endif
