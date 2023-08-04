@@ -1,4 +1,4 @@
-# **************************************************************************** #
+﻿# **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
@@ -14,49 +14,47 @@
 
 NAME = fdf
 
-SRC_DIR = ./srcs
-MLX_DIR = ./includes/minilibx
-LIBFT_DIR = ./includes/libft
+SRCS_LIST = main.c
 
-SRC_FILES = main.c
-MLX_FILES = ./includes/libmlx.a
+SRCS_DIR = srcs/
+OBJS_DIR = objs/
+LIBFT_DIR = includes/libft/
 
-SRCS = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
-OBJS = $(SRCS:.c=.o)
+SRCS = $(addprefix $(SRCS_DIR), $(SRCS_LIST))
+OBJS = $(addprefix $(OBJS_DIR), $(SRCS_LIST:.c=.o))
+
+LIBFT = $(addprefix $(LIBFT_DIR), libft.a)
+LIBMLX_DIR = includes/minilibx/
+LIBMLX = $(addprefix $(LIBMLX_DIR), libmlx.a)
 
 CC = cc
-
-CFLAGS = -Wall -Wextra -Werror -g
-
-LDFLAGS = -L$(MLX_DIR) -L$(LIBFT_DIR)
-LDLIBS = -lX11 -lXext -lmlx -lft
-INCLUDES = -Iincludes -I$(LIBFT_DIR)
+CFLAGS = -Wall -Werror -Wextra -g
+RM = rm -rf
 
 all: $(NAME)
 
-$(NAME): $(OBJS)
-	$(CC) $(LDFLAGS) $(OBJS) $(LDLIBS) -o $(NAME)
+$(NAME): $(OBJS) $(LIBFT) $(LIBMLX)
+	$(CC) $(CFLAGS) $(OBJS) -L$(LIBFT_DIR) -lft -L$(LIBMLX_DIR) -lmlx -lX11 -lXext -lm -o $(NAME)
 
-$(SRC_DIR)/%.o: $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+$(OBJS_DIR)%.o: $(SRCS_DIR)%.c | $(OBJS_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
 
-$(LIBFT_DIR)/libft.a:
-	$(MAKE) -C $(LIBFT_DIR)
+$(OBJS_DIR):
+	mkdir $(OBJS_DIR)
 
-$(MLX_DIR)/libmlx.a:
-	$(MAKE) -C $(MLX_DIR)
+$(LIBFT):
+	make -C $(LIBFT_DIR)
 
-$(OBJS): | $(LIBFT_DIR)/libft.a $(MLX_DIR)/libmlx.a
+$(LIBMLX):
+	make -C $(LIBMLX_DIR)
 
 clean:
-	rm -f $(OBJS)
-	$(MAKE) -C $(LIBFT_DIR) clean
-	$(MAKE) -C $(MLX_DIR) clean
+	$(RM) $(OBJS_DIR)
+	make clean -C $(LIBFT_DIR)
 
 fclean: clean
-	rm -f $(NAME)
-	$(MAKE) -C $(LIBFT_DIR) fclean
+	$(RM) $(NAME)
+	make fclean -C $(LIBFT_DIR)
+	make clean -C $(LIBMLX_DIR)
 
 re: fclean all
-
-.PHONY: all clean fclean re
