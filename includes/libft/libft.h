@@ -23,9 +23,9 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdarg.h>
-# include <stdio.h>
 # include <stdbool.h>
-
+# include <limits.h>
+# include <stdio.h>
 
 /*_______________________________FUNCTIONS__________________________________*/
 
@@ -92,7 +92,7 @@ void	ft_striteri(char *s, void (*f)(unsigned int, char*));
 /*_________________________________________________________________________*/
 
 //EXTRAS
-
+int		ft_printf(const char *fmt, ...);
 char	*get_next_line(int fd);
 
 /*_________________________________________________________________________*/

@@ -6,40 +6,73 @@
 /*   By: jhogonca <jhogonca@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 01:18:23 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/07/26 20:51:09 by jhogonca         ###   ########.fr       */
+/*   Updated: 2023/08/05 17:57:18 by jhogonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/fdf.h"
 
-void	error(char *str)
+/* void	set_map(t_fdf *fdf, char *file_name)
 {
-	if (str)
-		ft_putstr_fd(str, 2);
-	else
-		perror("Error");
-	exit(0);
+	printf("x: %f y: %f\n", fdf->coordinates->x, fdf->coordinates->y);
+	printf("file_name: %s\n", file_name);
 }
-/*
-void	set_map(t_fdf *fdf, char *file_name)
+ */
+
+size_t	ft_arrlen(char **array)
 {
-	printf("x: %d y: %d\n", fdf->coordinates->x, fdf->coordinates->x);
+	size_t i;
+
+	i = 0;
+	while (array[i])
+		i++;
+	return (i);
 }
-*/
+
+void map_read(t_fdf *fdf, int fd)
+{
+	char	*line;
+	unsigned int height;
+
+	line = NULL;
+	height = 0;
+	line = get_next_line(fd);
+	while (line)
+	{
+		ft_printf("line: %s", line);
+		height++;
+		free(line);
+		line = get_next_line(fd);
+	}
+	fdf->coordinates.z = height;
+}
+
+void	ft_initialization(t_fdf *fdf, char *map)
+{
+	int	fd;
+
+	fd = open(map, O_RDONLY);
+	if (fd < 0)
+	{
+		fdf->error = true;
+		fdf->error_message = "Error: open() failed\n";
+	}
+	map_read(fdf, fd);
+	close(fd);
+}
 
 int main(int ac, char **av)
 {
 	t_fdf	fdf;
 	if (ac != 2)
-		error("Error: Invalid number of arguments\n");
+		return (write(1, "Error: Invalid number of arguments\n", 35));
 	fdf = (t_fdf) {0};
-	//set_map(&fdf, av[1]);
-	//return (0);
-	fdf.mlx = mlx_init();
+	fdf.coordinates = (t_point) {0};
+	ft_initialization(&fdf, av[1]);
 
+	/* fdf.mlx = mlx_init();
 	fdf.window = mlx_new_window(fdf.mlx, 500, 500, "FDF");
-	mlx_loop(fdf.mlx);
-	printf("Arg %s: ", av[1]);
+	mlx_loop(fdf.mlx); */
 	return (0);
 }
 

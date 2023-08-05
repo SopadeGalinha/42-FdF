@@ -6,7 +6,7 @@
 /*   By: jhogonca <jhogonca@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 00:31:27 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/07/26 20:50:01 by jhogonca         ###   ########.fr       */
+/*   Updated: 2023/08/05 09:17:54 by jhogonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ typedef struct s_fdf
 	void	*window;
 	void	*mlx;
 	bool	error;
+	char	*error_message;
+	t_point	coordinates;
 }		t_fdf;
 
 #endif
