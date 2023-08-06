@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jhogonca <jhogonca@student.42porto.com>    +#+  +:+       +#+         #
+#    By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/25 20:04:30 by jhogonca          #+#    #+#              #
-#    Updated: 2023/08/05 17:57:10 by jhogonca         ###   ########.fr        #
+#    Updated: 2023/08/06 03:50:43 by jhoonca          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,11 +50,11 @@ $(MLX):
 
 clean:
 	$(RM) $(OBJS_DIR)
-#	make clean -C $(LIBFT_DIR)
+	make clean -C $(LIBFT_DIR)
 
 fclean: clean
 	$(RM) $(NAME)
-#	make fclean -C $(LIBFT_DIR)
+	make fclean -C $(LIBFT_DIR)
 #	make clean -C $(MLX_DIR)
 
 re: fclean all

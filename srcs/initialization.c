@@ -1,43 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fdf.h                                              :+:      :+:    :+:   */
+/*   initialization.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/11 00:31:27 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/08/06 03:52:29 by jhoonca          ###   ########.fr       */
+/*   Created: 2023/08/06 02:33:39 by jhoonca           #+#    #+#             */
+/*   Updated: 2023/08/06 02:57:00 by jhoonca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../includes/fdf.h"
 
-#ifndef FDF_H
-# define FDF_H
-
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 13
-# endif
-
-# include "./minilibx/mlx.h"
-# include "./libft/libft.h"
-
-typedef struct s_point
+void    initialization(t_fdf *fdf, char *map)
 {
-	float	x;
-	float	y;
-	float	z;
-	int	color;
-}		t_point;
+    int fd;
 
-typedef struct s_fdf
-{
-	void	*window;
-	void	*mlx;
-	int		max_x;
-	int		max_y;
-	bool	error;
-	char	*error_message;
-	t_point	coordinates;
-}		t_fdf;
-
-#endif
+    if (ft_strrchr(map, ".fdf"))
+        printf("fdf file\n");
+    else
+        printf("not file\n");
+    fd = open(map, O_RDONLY);
+    if (fd < 0)
+    {
+        fdf->error = true;
+        fdf->error_message = "Error: open() failed\n";
+    }
+    map_read(fdf, fd);
+}

@@ -3,31 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhogonca <jhogonca@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 01:18:23 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/08/05 17:57:18 by jhogonca         ###   ########.fr       */
+/*   Updated: 2023/08/06 06:50:37 by jhoonca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/fdf.h"
-
-/* void	set_map(t_fdf *fdf, char *file_name)
-{
-	printf("x: %f y: %f\n", fdf->coordinates->x, fdf->coordinates->y);
-	printf("file_name: %s\n", file_name);
-}
- */
-
-size_t	ft_arrlen(char **array)
-{
-	size_t i;
-
-	i = 0;
-	while (array[i])
-		i++;
-	return (i);
-}
 
 void map_read(t_fdf *fdf, int fd)
 {
@@ -47,18 +30,72 @@ void map_read(t_fdf *fdf, int fd)
 	fdf->coordinates.z = height;
 }
 
+static void	is_hexdigit(t_fdf *fdf, char *str)
+{
+	int	i;
+
+	i = 0;
+	if (str[i] == '-')
+		i++;
+	if (str[i] == '0' && str[i + 1] == 'x')
+		i += 2;
+	while (str[i] != '\n')
+	{
+		if (!ft_isdigit(str[i]) && !ft_strchr("abcdef", ft_tolower(str[i]))){
+			fdf->error_message = "Error: invalid color/number\n";
+		}
+		i++;
+	}
+}
+
+static void	get_height_width(t_fdf *fdf, int fd)
+{
+	char	*line;
+	char	**split;
+	int		i;
+	int		j;
+
+	i = 0;
+	line = NULL;
+	line = get_next_line(fd);
+	split = ft_split(line, ' ');
+	while (line)
+	{
+		j = 0;
+		while (split[j])
+		{
+			is_hexdigit(fdf, split[j]);
+			j++;
+		}
+		i++;
+		free(line);
+		line = get_next_line(fd);
+	}
+	fdf->coordinates.y = i;
+	fdf->coordinates.x = j;
+}
+
 void	ft_initialization(t_fdf *fdf, char *map)
 {
 	int	fd;
-
+	
+	if (!(ft_strnstr(map, ".fdf", ft_strlen(map))))
+	{
+		fdf->error = true;
+		fdf->error_message = "Error: Invalid file extension\n";
+	}
 	fd = open(map, O_RDONLY);
 	if (fd < 0)
 	{
 		fdf->error = true;
 		fdf->error_message = "Error: open() failed\n";
 	}
-	map_read(fdf, fd);
+	else
+		get_height_width(fdf, fd);
 	close(fd);
+	if (fdf->error_message)
+		fdf->error = true;
+	printf("error_message: %s\n", fdf->error_message);
 }
 
 int main(int ac, char **av)

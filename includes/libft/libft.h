@@ -94,6 +94,7 @@ void	ft_striteri(char *s, void (*f)(unsigned int, char*));
 //EXTRAS
 int		ft_printf(const char *fmt, ...);
 char	*get_next_line(int fd);
+int		count_words(char const *s, char c);
 
 /*_________________________________________________________________________*/
 
