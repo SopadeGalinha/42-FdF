@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fdf.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
+/*   By: jhogonca <jhogonca@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 00:31:27 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/08/06 03:52:29 by jhoonca          ###   ########.fr       */
+/*   Updated: 2023/08/07 00:03:06 by jhogonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,13 @@
 # define FDF_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 13
+#  define BUFFER_SIZE 1000
 # endif
 
 # include "./minilibx/mlx.h"
 # include "./libft/libft.h"
+# include <pthread.h>
+# include <math.h>
 
 typedef struct s_point
 {
