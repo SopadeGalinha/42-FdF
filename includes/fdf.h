@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fdf.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhogonca <jhogonca@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 00:31:27 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/08/07 00:03:06 by jhogonca         ###   ########.fr       */
+/*   Updated: 2023/08/09 19:02:07 by jhoonca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,21 @@ typedef struct s_point
 	int	color;
 }		t_point;
 
-typedef struct s_fdf
+typedef struct s_map
 {
-	void	*window;
-	void	*mlx;
+	t_point **coordinates;
 	int		max_x;
 	int		max_y;
-	bool	error;
+	int		max_z;
+	int		min_z;
+}	t_map;
+
+typedef struct s_fdf
+{
+	t_map	*map;
+	void	*window;
+	void	*mlx;
 	char	*error_message;
-	t_point	coordinates;
 }		t_fdf;
 
 #endif

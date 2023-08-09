@@ -3,47 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhogonca <jhogonca@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 01:18:23 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/08/07 00:08:33 by jhogonca         ###   ########.fr       */
+/*   Updated: 2023/08/09 20:20:18 by jhoonca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/fdf.h"
-
-static void	is_hexdigit(t_fdf *fdf, char *str)
-{
-	int	i;
-
-	i = 0;
-	if (str[i] == '-')
-		i++;
-	if (ft_strstr(str, "0x"))
-	{
-		while(str[i] && str[i] != ',')
-		{
-			if (!ft_strchr("0123456789", str[i]))
-				fdf->error_message = "Error: Invalid map 1\n";			
-			i++;
-		}
-		i += 3;
-		if (!str[i])
-			fdf->error_message = "Error: Invalid map 2\n";
-		while (str[i] && str[i] != '\n')
-		{
-			if (!ft_strchr("0123456789ABCDEFabcdef", str[i]))
-				fdf->error_message = "Error: Invalid map 3\n";
-			i++;
-		}
-	}
-	while (str[i] && str[i] != '\n')
-	{
-		if (!ft_strchr("0123456789", str[i]))
-			fdf->error_message = "Error: Invalid map 3\n";
-		i++;
-	}
-}
 
 void	ft_free_split(char **split)
 {
@@ -55,55 +22,87 @@ void	ft_free_split(char **split)
 	free(split);
 }
 
-static void get_dimensions(t_fdf *fdf, int fd) {
-    char *line;
-    char **split;
-    int i;
+int	ft_arrlen(char **arr)
+{
+	int	i;
 
-    while ((line = get_next_line(fd))) {
-        split = ft_split(line, ' ');
-        i = 0;
-        while (split[i]) {
-            is_hexdigit(fdf, split[i]);
-            i++;
-        }
-        if (fdf->coordinates.x == 0) {
-            fdf->coordinates.x = i;
-        } else if (fdf->coordinates.x != i) {
-            fdf->error_message = "Error: Invalid map 4\n";
-            break;
-        }
-        ft_free_split(split);
-        free(line);
-    }
+	i = 0;
+	while (arr[i] && arr[i][0] != '\n')
+		i++;
+	return (i);
 }
 
-void ft_initialization(t_fdf *fdf, char *map) {
-    int fd;
+static void get_dimensions(t_fdf *fdf, int fd)
+{
+	char *line;
+	char **split;
 
-    if (!(ft_strnstr(map, ".fdf", ft_strlen(map)))) {
-        fdf->error = true;
-        fdf->error_message = "Error: Invalid file extension\n";
-        return;
-    }
-
-    fd = open(map, O_RDONLY);
-    if (fd < 0) {
-        fdf->error = true;
-        fdf->error_message = "Error: open() failed\n";
-        return;
-    }
-
-    get_dimensions(fdf, fd);
-
-    close(fd);
-
-	printf("fdf->coordinates.x: %f\n", fdf->coordinates.x);
-    if (fdf->error_message) {
-        printf("error_message: %s\n", fdf->error_message);
-        fdf->error = true;
-    }
+	line = get_next_line(fd);
+	while (line)
+	{
+		fdf->map->max_y++;
+		split = ft_split(line, ' ');
+		if (fdf->map->max_x == 0)
+			fdf->map->max_x = ft_arrlen(split);
+		else if (fdf->map->max_x != ft_arrlen(split))
+			fdf->error_message = "Error: Invalid map 1\n";
+		ft_free_split(split);
+		free(line);
+		if (fdf->error_message)
+			return ;
+		line = get_next_line(fd);
+	}
+	if ((fdf->map->max_y < 2 || fdf->map->max_x < 2)
+		|| (fdf->map->max_y > 1000 || fdf->map->max_x > 1000))
+			fdf->error_message = "Error: Invalid map 2\n";
 }
+
+void	set_map( t_fdf *fdf)
+{
+	int i;
+
+	i = 0;
+	fdf->map->coordinates = (t_point **)malloc(sizeof(t_point *) * fdf->map->max_y);
+	if (!fdf->map)
+	{
+		fdf->error_message = "Error: malloc() failed\n";
+		return;
+	}
+	while (i < fdf->map->max_y)
+	{
+		fdf->map->coordinates[i] = (t_point *)malloc(sizeof(t_point) * fdf->map->max_x);
+		if (!fdf->map->coordinates[i])
+		{
+			fdf->error_message = "Error: malloc() failed\n";
+			return;
+		}
+		i++;
+	}
+}
+
+void ft_initialization(t_fdf *fdf, char *map)
+{
+	int fd;
+
+	if (!(ft_strstr(map, ".fdf")) || ft_strlen(map) < 5)
+	{
+		fdf->error_message = "Error: Invalid file extension\n";
+		return;
+	}
+
+	fd = open(map, O_RDONLY);
+	if (fd < 0)
+	{
+		fdf->error_message = "Error: open() failed\n";
+		return;
+	}
+	get_dimensions(fdf, fd);
+	// if (!fdf->error_message)
+		// set_map(fdf);
+	close(fd);
+}
+
+
 
 int main(int ac, char **av)
 {
@@ -111,7 +110,12 @@ int main(int ac, char **av)
 	if (ac != 2)
 		return (write(1, "Error: Invalid number of arguments\n", 35));
 	fdf = (t_fdf) {0};
-	fdf.coordinates = (t_point) {0};
+	fdf.map = &((t_map){0});
+	fdf.map->coordinates = &((t_point*){0});
 	ft_initialization(&fdf, av[1]);
+	
+	printf("error_message: %s\n", fdf.error_message);
+	printf("x: %d\n", fdf.map->max_x);
+	printf("y: %d\n", fdf.map->max_y);
 	return (0);
-} 
+}
