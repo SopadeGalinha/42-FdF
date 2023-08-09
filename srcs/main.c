@@ -6,7 +6,7 @@
 /*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 01:18:23 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/08/09 20:20:18 by jhoonca          ###   ########.fr       */
+/*   Updated: 2023/08/09 22:07:54 by jhoonca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,38 +46,70 @@ static void get_dimensions(t_fdf *fdf, int fd)
 			fdf->map->max_x = ft_arrlen(split);
 		else if (fdf->map->max_x != ft_arrlen(split))
 			fdf->error_message = "Error: Invalid map 1\n";
-		ft_free_split(split);
 		free(line);
+		ft_free_split(split);
 		if (fdf->error_message)
 			return ;
 		line = get_next_line(fd);
+		printf("line %d\n", fdf->map->max_y);
 	}
 	if ((fdf->map->max_y < 2 || fdf->map->max_x < 2)
 		|| (fdf->map->max_y > 1000 || fdf->map->max_x > 1000))
 			fdf->error_message = "Error: Invalid map 2\n";
 }
 
-void	set_map( t_fdf *fdf)
-{
+
+void print_map(t_fdf *fdf) {
 	int i;
+	int j;
 
 	i = 0;
-	fdf->map->coordinates = (t_point **)malloc(sizeof(t_point *) * fdf->map->max_y);
-	if (!fdf->map)
+	while (i < fdf->map->max_y)
 	{
-		fdf->error_message = "Error: malloc() failed\n";
-		return;
+		j = 0;
+		while (j < fdf->map->max_x)
+		{
+			if (fdf->map->coordinates[i][j].z != 0)
+				printf("\033[1;31m% 3d\033[0m", (int)fdf->map->coordinates[i][j].z);
+			else
+				printf("% 3d", (int)fdf->map->coordinates[i][j].z);
+			j++;
+		}
+		printf("\n");
+		i++;
 	}
+}
+
+void	set_map( t_fdf *fdf, char *map)
+{
+	int fd;
+	char *line;
+	char **split;
+	int i;
+	int j;
+
+	fd = open(map, O_RDONLY);
+	fdf->map->coordinates = (t_point **)malloc(sizeof(t_point *) * fdf->map->max_y);
+	i = 0;
 	while (i < fdf->map->max_y)
 	{
 		fdf->map->coordinates[i] = (t_point *)malloc(sizeof(t_point) * fdf->map->max_x);
-		if (!fdf->map->coordinates[i])
+		j = 0;
+		line = get_next_line(fd);
+		split = ft_split(line, ' ');
+		while (j < fdf->map->max_x)
 		{
-			fdf->error_message = "Error: malloc() failed\n";
-			return;
+			fdf->map->coordinates[i][j].x = j;
+			fdf->map->coordinates[i][j].y = i;
+			fdf->map->coordinates[i][j].z = ft_atoi(split[j]);
+			j++;
 		}
+		ft_free_split(split);
+		free(line);
 		i++;
 	}
+	close(fd);
+	print_map(fdf);
 }
 
 void ft_initialization(t_fdf *fdf, char *map)
@@ -97,12 +129,10 @@ void ft_initialization(t_fdf *fdf, char *map)
 		return;
 	}
 	get_dimensions(fdf, fd);
-	// if (!fdf->error_message)
-		// set_map(fdf);
+	if (!fdf->error_message)
+		set_map(fdf, map);
 	close(fd);
 }
-
-
 
 int main(int ac, char **av)
 {
