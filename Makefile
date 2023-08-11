@@ -3,16 +3,16 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+         #
+#    By: jhogonca <jhogonca@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/25 20:04:30 by jhogonca          #+#    #+#              #
-#    Updated: 2023/08/09 22:06:46 by jhoonca          ###   ########.fr        #
+#    Updated: 2023/08/11 01:21:53 by jhogonca         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = fdf
 
-SRCS_LIST = main.c
+SRCS_LIST = main.c initialization.c
 
 SRCS_DIR = srcs/
 OBJS_DIR = srcs/objs/
@@ -27,7 +27,7 @@ MLX_DIR = includes/minilibx/
 
 CC = cc
 RM = rm -rf
-CFLAGS = 
+CFLAGS = -Wall -Wextra -Werror -g
 
 all: $(NAME)
 
@@ -58,5 +58,5 @@ fclean: clean
 re: fclean all
 
 norm:
-	norminette $(SRCS) $(LIBFT_DIR)includes/*.h
+	norminette $(SRCS) includes/*.h
 .PHONY: all clean fclean re

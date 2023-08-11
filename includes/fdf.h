@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   fdf.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
+/*   By: jhogonca <jhogonca@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 00:31:27 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/08/09 21:29:46 by jhoonca          ###   ########.fr       */
+/*   Updated: 2023/08/11 01:43:43 by jhogonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef FDF_H
 # define FDF_H
@@ -24,12 +23,11 @@ typedef struct s_point
 	float	x;
 	float	y;
 	float	z;
-	int	color;
+	int		color;
 }		t_point;
-
 typedef struct s_map
 {
-	t_point **coordinates;
+	t_point	**coordinates;
 	int		max_x;
 	int		max_y;
 	int		max_z;
@@ -43,5 +41,9 @@ typedef struct s_fdf
 	void	*mlx;
 	char	*error_message;
 }		t_fdf;
+
+/*____________________FUCTIONS____________________*/
+
+void	ft_initialization(t_fdf *fdf, char *map);
 
 #endif
