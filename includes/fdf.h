@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fdf.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhogonca <jhogonca@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 00:31:27 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/08/11 20:27:20 by jhogonca         ###   ########.fr       */
+/*   Updated: 2023/08/12 17:49:26 by jhoonca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,10 @@
 # include "./libft/libft.h"
 # include <pthread.h>
 # include <math.h>
+
+# define WINDOW_NAME	 	"fdf"
+# define WINDOW_WIDTH		1200
+# define WINDOW_HEIGHT		900
 
 typedef struct s_point
 {

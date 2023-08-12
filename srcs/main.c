@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhogonca <jhogonca@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 01:18:23 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/08/11 21:33:31 by jhogonca         ###   ########.fr       */
+/*   Updated: 2023/08/12 17:50:48 by jhoonca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,13 @@ void	print_map(t_fdf *fdf)
 	}
 }
 
+void	ft_render(t_fdf *fdf)
+{
+	fdf->mlx = mlx_init();
+	fdf->window = mlx_new_window(fdf->mlx, WINDOW_HEIGHT, WINDOW_WIDTH, WINDOW_NAME);
+	mlx_loop(fdf->mlx);
+}
+
 int	main(int ac, char **av)
 {
 	t_fdf	fdf;
@@ -73,8 +80,9 @@ int	main(int ac, char **av)
 	ft_initialization(&fdf, av[1]);
 	print_map(&fdf);
 	print_colors(&fdf);
-	if (fdf.error_message)
+	if (!fdf.error_message)
+		ft_render(&fdf);
+	else
 		printf("error_message: %s\n", fdf.error_message);
 	return (0);
 }
-*.c
