@@ -6,7 +6,7 @@
 /*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 00:31:27 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/08/12 17:49:26 by jhoonca          ###   ########.fr       */
+/*   Updated: 2023/08/12 20:58:42 by jhoonca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef struct s_point
 	float	z;
 	int		color;
 }		t_point;
+
 typedef struct s_map
 {
 	t_point	**coordinates;

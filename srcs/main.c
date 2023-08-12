@@ -6,7 +6,7 @@
 /*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 01:18:23 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/08/12 17:50:48 by jhoonca          ###   ########.fr       */
+/*   Updated: 2023/08/12 22:23:16 by jhoonca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,11 +63,42 @@ void	print_map(t_fdf *fdf)
 	}
 }
 
-void	ft_render(t_fdf *fdf)
+void	bresenham(float x, float y, float x1, float y1, t_fdf *fdf)
+{
+	float	step_x;
+	float	step_y;
+	int		max;
+	
+	step_x = x1 - x;
+	step_y = y1 - y;
+	
+	max = MAX(MOD(step_x), MOD(step_y));
+	step_x /= max;
+	step_y /= max;
+	while ((int)(x - x1) || (int)(y - y1))
+	{
+		mlx_pixel_put(fdf->mlx, fdf->window, x, y, 0xFFFFFF);
+		x += step_x;
+		y += step_y;
+	}
+}
+
+int	deal_key(int key, void *param)
+{
+	printf("key: %d\n", key);
+	return (0);
+}
+
+void	draw(t_fdf *fdf)
 {
 	fdf->mlx = mlx_init();
-	fdf->window = mlx_new_window(fdf->mlx, WINDOW_HEIGHT, WINDOW_WIDTH, WINDOW_NAME);
+	fdf->window = mlx_new_window(fdf->mlx, 1000, 1000, "FDF");
+	
+	bresenham(10, 10, 600, 300, fdf);
+	mlx_key_hook(fdf->window, deal_key, NULL);
 	mlx_loop(fdf->mlx);
+	
+	
 }
 
 int	main(int ac, char **av)
@@ -81,7 +112,7 @@ int	main(int ac, char **av)
 	print_map(&fdf);
 	print_colors(&fdf);
 	if (!fdf.error_message)
-		ft_render(&fdf);
+		draw(&fdf);
 	else
 		printf("error_message: %s\n", fdf.error_message);
 	return (0);
