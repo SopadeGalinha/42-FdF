@@ -6,7 +6,7 @@
 /*   By: jhogonca <jhogonca@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 01:18:23 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/08/11 01:31:15 by jhogonca         ###   ########.fr       */
+/*   Updated: 2023/08/11 21:33:31 by jhogonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,18 @@ void	print_map(t_fdf *fdf)
 		j = 0;
 		while (j < fdf->map->max_x)
 		{
-			if (fdf->map->coordinates[i][j].z != 0)
-				printf("\033[1;31m% 3d\033[0m", (int)fdf->map->coordinates[i][j].z);
+			if (fdf->map->coordinates[i][j].z > 0)
+			{
+				printf("\033[0;31m");
+				printf("% 3d", (int)fdf->map->coordinates[i][j].z);
+				printf("\033[0m");
+			}
+			else if (fdf->map->coordinates[i][j].z < 0)
+			{
+				printf("\033[0;34m");
+				printf("% 3d", (int)fdf->map->coordinates[i][j].z);
+				printf("\033[0m");
+			}
 			else
 				printf("% 3d", (int)fdf->map->coordinates[i][j].z);
 			j++;
@@ -59,14 +69,12 @@ int	main(int ac, char **av)
 
 	if (ac != 2)
 		return (write(1, "Error: Invalid number of arguments\n", 35));
-	fdf = (t_fdf){0};
-	fdf.map = &((t_map){0});
-	fdf.map->coordinates = &((t_point *){0});
+	fdf = (t_fdf){.map = &(t_map){.coordinates = &(t_point *){0}}};
 	ft_initialization(&fdf, av[1]);
-
 	print_map(&fdf);
 	print_colors(&fdf);
 	if (fdf.error_message)
 		printf("error_message: %s\n", fdf.error_message);
 	return (0);
 }
+*.c

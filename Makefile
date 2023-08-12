@@ -6,13 +6,13 @@
 #    By: jhogonca <jhogonca@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/25 20:04:30 by jhogonca          #+#    #+#              #
-#    Updated: 2023/08/11 01:21:53 by jhogonca         ###   ########.fr        #
+#    Updated: 2023/08/11 17:03:04 by jhogonca         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = fdf
 
-SRCS_LIST = main.c initialization.c
+SRCS_LIST = main.c initialization.c ft_atoi_base.c init_utils.c
 
 SRCS_DIR = srcs/
 OBJS_DIR = srcs/objs/
