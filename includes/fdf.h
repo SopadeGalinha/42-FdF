@@ -6,7 +6,7 @@
 /*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 00:31:27 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/08/12 20:58:42 by jhoonca          ###   ########.fr       */
+/*   Updated: 2023/08/16 21:54:47 by jhoonca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,20 @@
 # include <pthread.h>
 # include <math.h>
 
-# define WINDOW_NAME	 	"fdf"
-# define WINDOW_WIDTH		1200
-# define WINDOW_HEIGHT		900
+# ifndef WINDOW_NAME
+#  define WINDOW_NAME	 	"FDF"
+# endif
+
+#define WINDOW_FULL_SCREEN	0
+#define MAX(a, b) (a > b ? a : b);
+#define MOD(a) (a < 0 ? -a : a);
 
 typedef struct s_point
 {
 	float	x;
 	float	y;
 	float	z;
-	int		color;
+	int		color;	
 }		t_point;
 
 typedef struct s_map
@@ -37,6 +41,7 @@ typedef struct s_map
 	int		max_y;
 	int		max_z;
 	int		min_z;
+	int		zoom;
 }	t_map;
 
 typedef struct s_fdf
@@ -44,6 +49,8 @@ typedef struct s_fdf
 	t_map	*map;
 	void	*window;
 	void	*mlx;
+	int		window_width;
+	int		window_height;
 	char	*error_message;
 }		t_fdf;
 
