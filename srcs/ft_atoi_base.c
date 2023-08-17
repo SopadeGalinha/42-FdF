@@ -68,7 +68,7 @@ static bool	is_hex(const char *str)
 	int	i;
 
 	i = 0;
-	while (str[i] != '\0')
+	while (str[i] != '\0' && str[i] != '\n' && str[i] != ' ')
 	{
 		if ((str[i] >= '0' && str[i] <= '9')
 			|| (str[i] >= 'A' && str[i] <= 'F')

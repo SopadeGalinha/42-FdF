@@ -6,13 +6,13 @@
 /*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 00:44:11 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/08/16 22:06:41 by jhoonca          ###   ########.fr       */
+/*   Updated: 2023/08/17 20:26:29 by jhoonca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fdf.h"
 
-void	set_map_aux(int j, t_fdf *fdf, char **split, int i)
+static void	set_map_aux(int j, t_fdf *fdf, char **split, int i)
 {
 	while (j < fdf->map->max_x)
 	{
@@ -32,7 +32,7 @@ void	set_map_aux(int j, t_fdf *fdf, char **split, int i)
 	}
 }
 
-void	set_map( t_fdf *fdf, char *map)
+static void	set_map( t_fdf *fdf, char *map)
 {
 	int		fd;
 	char	*line;
@@ -41,7 +41,7 @@ void	set_map( t_fdf *fdf, char *map)
 	int		j;
 
 	fd = open(map, O_RDONLY);
-	fdf->map->coordinates
+	fdf->map->coordinates \
 		= (t_point **)malloc(sizeof(t_point *) * fdf->map->max_y);
 	i = 0;
 	while (i < fdf->map->max_y)
@@ -59,15 +59,31 @@ void	set_map( t_fdf *fdf, char *map)
 	close(fd);
 }
 
+static bool valid_path(char *map, t_fdf *fdf)
+{
+	int	c;
+	int i;
+
+	c = 0;
+	i = -1;
+	if (!(ft_strstr(map, ".fdf")) || ft_strlen(map) < 5)
+		fdf->error_message = "Error: Invalid file extension\n";
+	while (map[++i])
+		if (map[i] == '.')
+			c++;	
+	if (c != 1)
+		fdf->error_message = "Error: Invalid file extension\n";
+	if (fdf->error_message)
+		return (false);
+	return (true);
+}
+
 void	ft_initialization(t_fdf *fdf, char *map)
 {
 	int	fd;
 
-	if (!(ft_strstr(map, ".fdf")) || ft_strlen(map) < 5)
-	{
-		fdf->error_message = "Error: Invalid file extension\n";
+	if (!valid_path(map, fdf))
 		return ;
-	}
 	fd = open(map, O_RDONLY);
 	if (fd < 0)
 	{
@@ -81,8 +97,8 @@ void	ft_initialization(t_fdf *fdf, char *map)
 	{
 		fdf->mlx = mlx_init();
 		mlx_get_screen_size(fdf->mlx, &(fdf->window_width), &(fdf->window_height));
-		fdf->window_width = fdf->window_width / 1.5;
+	 	fdf->window_width = fdf->window_width / 1.5;
 		fdf->window_height = fdf->window_width / 1.5;
-	}
+ 	}
 	close(fd);
 }
