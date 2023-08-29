@@ -6,7 +6,7 @@
 /*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 01:18:23 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/08/17 22:01:45 by jhoonca          ###   ########.fr       */
+/*   Updated: 2023/08/30 00:53:45 by jhoonca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,105 +21,77 @@ int	print_keycode(int key, void *param)
 {
 	if (key < 0)
 		param = NULL;
+	if (key == 65307)
+		exit(0);
 	printf("key: %d\n", key);
 	return (0);
 }
 
-void apply_isometric(float *x, float *y, int z, int zoom)
+void apply_isometric(float *x, float *y, int z)
 {
     *x = (*x - *y) * cos(0.523599);
-    *y = (*x + *y) * sin(0.523599) - z * zoom;
+    *y = (*x + *y) * sin(0.523599) - z;
 }
 
 void bresenham(float x_iso, float y_iso, float x1_iso, float y1_iso, t_fdf *fdf, int color)
 {
-    float x_step;
-    float y_step;
-    int max;
+	float step[2];
+	int max;
 
-    x_step = x1_iso - x_iso;
-    y_step = y1_iso - y_iso;
+	step[POS_X] = x1_iso - x_iso;
+	step[POS_Y] = y1_iso - y_iso;
+	
+	max = MAX(mod(step[POS_X]), mod(step[POS_Y]));
+	step[POS_X] /= max;
+	step[POS_Y] /= max;
 
-    max = MAX(mod(x_step), mod(y_step));
-    x_step /= max;
-    y_step /= max;
+	while ((int)(x_iso - x1_iso) || (int)(y_iso - y1_iso))
+	{
+		mlx_pixel_put(fdf->mlx, fdf->window, x_iso, y_iso, color);
+		x_iso += step[POS_X];
+		y_iso += step[POS_Y];
+	}
+}
 
-    while ((int)(x_iso - x1_iso) || (int)(y_iso - y1_iso))
-    {
-        mlx_pixel_put(fdf->mlx, fdf->window, x_iso, y_iso, color);
-        x_iso += x_step;
-        y_iso += y_step;
-    }
+
+void center_grid(int x, int y, t_fdf *fdf, int *start, int *end)
+{
+	start[POS_X] = (x - (fdf->map->max_x / 2)) * fdf->map->zoom + (fdf->window_width / 2);
+	start[POS_Y] = (y - (fdf->map->max_y / 2)) * fdf->map->zoom + (fdf->window_height / 2);
+	end[POS_X] = (x + 1 - (fdf->map->max_x / 2)) * fdf->map->zoom + (fdf->window_width / 2);
+	end[POS_Y] = (y + 1 - (fdf->map->max_y / 2)) * fdf->map->zoom + (fdf->window_height / 2);
+}
+
+void draw(t_fdf *fdf)
+{
+	int x;
+	int y;
+	int start[2];
+	int end[2];
+
+	y = -1;
+	while (++y < fdf->map->max_y)
+	{
+		x = -1;
+		while (++x < fdf->map->max_x)
+		{
+			center_grid(x, y, fdf, start, end);
+			if (x < fdf->map->max_x - 1)
+				bresenham(start[POS_X], start[POS_Y], end[POS_X], start[POS_Y], fdf, fdf->map->coordinates[y][x].color);
+			if (y < fdf->map->max_y - 1)
+				bresenham(start[POS_X], start[POS_Y], start[POS_X], end[POS_Y], fdf, fdf->map->coordinates[y][x].color);
+		}
+	}
 }
 
 void render(t_fdf *fdf)
 {
-    int y;
-    int x;
-
-    fdf->window = mlx_new_window(fdf->mlx, fdf->window_width, fdf->window_height, WINDOW_NAME);
-    fdf->map->zoom = 20;
-    int center_x = fdf->window_width / 2;
-    int center_y = fdf->window_height / 2;
-
-    // Calculate the center pixel of the map
-    int center_pixel_x = fdf->map->max_x * fdf->map->zoom / 2;
-    int center_pixel_y = fdf->map->max_y * fdf->map->zoom / 2;
-
-    // Calculate the displacement needed to center the map
-    int x_displacement = center_x - center_pixel_x;
-    int y_displacement = center_y - center_pixel_y;
-
-    y = -1;
-    while (++y < fdf->map->max_y)
-    {
-        x = -1;
-        while (++x < fdf->map->max_x)
-        {
-            float x_iso = x * fdf->map->zoom;
-            float y_iso = y * fdf->map->zoom;
-            float z_iso = fdf->map->coordinates[y][x].z * fdf->map->zoom;
-
-            // Apply isometric transformation
-            apply_isometric(&x_iso, &y_iso, z_iso, fdf->map->zoom);
-
-            // Apply the displacement to center the map
-            x_iso += x_displacement;
-            y_iso += y_displacement;
-
-            if (x < fdf->map->max_x - 1)
-            {
-                float x1_iso = (x + 1) * fdf->map->zoom;
-                float y1_iso = y * fdf->map->zoom;
-                float z1_iso = fdf->map->coordinates[y][x + 1].z * fdf->map->zoom;
-
-                apply_isometric(&x1_iso, &y1_iso, z1_iso, fdf->map->zoom);
-
-                x1_iso += x_displacement;
-                y1_iso += y_displacement;
-
-                bresenham(x_iso, y_iso, x1_iso, y1_iso, fdf, fdf->map->coordinates[y][x].color);
-            }
-
-            if (y < fdf->map->max_y - 1)
-            {
-                float x1_iso = x * fdf->map->zoom;
-                float y1_iso = (y + 1) * fdf->map->zoom;
-                float z1_iso = fdf->map->coordinates[y + 1][x].z * fdf->map->zoom;
-
-                apply_isometric(&x1_iso, &y1_iso, z1_iso, fdf->map->zoom);
-
-                x1_iso += x_displacement;
-                y1_iso += y_displacement;
-
-                bresenham(x_iso, y_iso, x1_iso, y1_iso, fdf, fdf->map->coordinates[y][x].color);
-            }
-        }
-    }
-    mlx_key_hook(fdf->window, print_keycode, NULL);
-    mlx_loop(fdf->mlx);
+	fdf->window = mlx_new_window(fdf->mlx, fdf->window_width, fdf->window_height, WINDOW_NAME);
+	fdf->map->zoom = MIN(fdf->window_width / fdf->map->max_x, fdf->window_height / fdf->map->max_y);
+	draw(fdf);
+	mlx_key_hook(fdf->window, print_keycode, NULL);
+	mlx_loop(fdf->mlx);
 }
-
 
 int	main(int ac, char **av)
 {

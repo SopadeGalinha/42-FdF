@@ -6,7 +6,7 @@
 /*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 00:31:27 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/08/16 21:54:47 by jhoonca          ###   ########.fr       */
+/*   Updated: 2023/08/29 22:10:39 by jhoonca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,25 @@
 # include "./libft/libft.h"
 # include <pthread.h>
 # include <math.h>
+# include <limits.h>
 
 # ifndef WINDOW_NAME
 #  define WINDOW_NAME	 	"FDF"
 # endif
 
 #define WINDOW_FULL_SCREEN	0
+
 #define MAX(a, b) (a > b ? a : b);
+
+#define MIN(a, b) (a < b ? a : b);
 #define MOD(a) (a < 0 ? -a : a);
+
+enum e_pos
+{
+	POS_X,
+	POS_Y,
+	POS_Z,
+};
 
 typedef struct s_point
 {
@@ -34,14 +45,22 @@ typedef struct s_point
 	int		color;	
 }		t_point;
 
+typedef struct s_center
+{
+	int	center_x;
+	int	center_y;
+	int	screen_center_x;
+	int	screen_center_y;
+}		t_center;
+
 typedef struct s_map
 {
 	t_point	**coordinates;
-	int		max_x;
-	int		max_y;
-	int		max_z;
-	int		min_z;
-	int		zoom;
+	int			max_x;
+	int			max_y;
+	int			max_z;
+	int			min_z;
+	int			zoom;
 }	t_map;
 
 typedef struct s_fdf
@@ -52,6 +71,7 @@ typedef struct s_fdf
 	int		window_width;
 	int		window_height;
 	char	*error_message;
+	t_center	*center;
 }		t_fdf;
 
 /*____________________FUCTIONS____________________*/

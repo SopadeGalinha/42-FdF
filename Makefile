@@ -6,7 +6,7 @@
 #    By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/25 20:04:30 by jhogonca          #+#    #+#              #
-#    Updated: 2023/08/16 21:48:02 by jhoonca          ###   ########.fr        #
+#    Updated: 2023/08/29 18:48:56 by jhoonca          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,7 @@ MLX_DIR = includes/minilibx/
 
 CC = cc
 RM = rm -rf
-CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
+CFLAGS = -g #-fsanitize=address
 
 all: $(NAME)
 
