@@ -6,7 +6,7 @@
 /*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 00:31:27 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/08/29 22:10:39 by jhoonca          ###   ########.fr       */
+/*   Updated: 2023/09/02 16:18:48 by jhoonca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,14 @@
 #define MIN(a, b) (a < b ? a : b);
 #define MOD(a) (a < 0 ? -a : a);
 
-enum e_pos
+enum e_axis
 {
-	POS_X,
-	POS_Y,
-	POS_Z,
+	START_X,
+	END_X,
+	START_Y,
+	END_Y,
+	START_Z,
+	END_Z,
 };
 
 typedef struct s_point

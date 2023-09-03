@@ -6,7 +6,7 @@
 /*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 01:18:23 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/08/30 00:53:45 by jhoonca          ###   ########.fr       */
+/*   Updated: 2023/09/02 17:40:16 by jhoonca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,59 +27,95 @@ int	print_keycode(int key, void *param)
 	return (0);
 }
 
-void apply_isometric(float *x, float *y, int z)
+void	set_axis(float *axis, int x, int y, bool line)
 {
-    *x = (*x - *y) * cos(0.523599);
-    *y = (*x + *y) * sin(0.523599) - z;
+	axis[START_X] = x;
+	axis[START_Y] = y;
+	axis[END_X] = x;
+	axis[END_Y] = y + 1;
+	if (line)
+		axis[END_X] = x + 1;
+	if (line)
+		axis[END_Y] = y;
 }
 
-void bresenham(float x_iso, float y_iso, float x1_iso, float y1_iso, t_fdf *fdf, int color)
+void	isometric(t_fdf *fdf, float *axis)
 {
-	float step[2];
-	int max;
+	float	previous_x;
+	float	previous_y;
 
-	step[POS_X] = x1_iso - x_iso;
-	step[POS_Y] = y1_iso - y_iso;
+	previous_x = axis[START_X];
+	previous_y = axis[START_Y];
+	axis[START_X] = (previous_x - previous_y) * cos(0.523599);
+	axis[START_Y] = -axis[START_Z] + (previous_x + previous_y) * sin(0.523599);
+	previous_x = axis[END_X];
+	previous_y = axis[END_Y];
+	axis[END_X] = (previous_x - previous_y) * cos(0.523599);
+	axis[END_Y] = -axis[END_Z] + (previous_x + previous_y) * sin(0.523599);
+}
+
+void	put_axis(t_fdf *fdf, float *axis, int color)
+{
+	axis[START_X] += fdf->window_width / 2;
+	axis[START_Y] += fdf->window_height / 2;
+	axis[END_X] += fdf->window_width / 2;
+	axis[END_Y] += fdf->window_height / 2;
+}
+
+void	brasenham(t_fdf *fdf, float *axis, int color)
+{
+	float	step_x;
+	float	step_y;
+	int		max;
+
+	axis[START_Z] = fdf->map->coordinates[(int)axis[START_Y]][(int)axis[START_X]].z;
+	axis[END_Z] = fdf->map->coordinates[(int)axis[END_Y]][(int)axis[END_X]].z;
 	
-	max = MAX(mod(step[POS_X]), mod(step[POS_Y]));
-	step[POS_X] /= max;
-	step[POS_Y] /= max;
-
-	while ((int)(x_iso - x1_iso) || (int)(y_iso - y1_iso))
+	//zoom
+	axis[START_X] *= fdf->map->zoom;
+	axis[START_Y] *= fdf->map->zoom;
+	axis[END_X] *= fdf->map->zoom;
+	axis[END_Y] *= fdf->map->zoom;
+	
+	isometric(fdf, axis);
+	put_axis(fdf, axis, color);
+	
+	step_x = axis[END_X] - axis[START_X];
+	step_y = axis[END_Y] - axis[START_Y];
+	max = MAX(mod(step_x), mod(step_y));
+	step_x /= max;
+	step_y /= max;
+	while ((int)(axis[START_X] - axis[END_X]) || (int)(axis[START_Y] - axis[END_Y]))
 	{
-		mlx_pixel_put(fdf->mlx, fdf->window, x_iso, y_iso, color);
-		x_iso += step[POS_X];
-		y_iso += step[POS_Y];
+		mlx_pixel_put(fdf->mlx, fdf->window, axis[START_X], axis[START_Y], color);
+		axis[START_X] += step_x;
+		axis[START_Y] += step_y;
 	}
 }
 
-
-void center_grid(int x, int y, t_fdf *fdf, int *start, int *end)
-{
-	start[POS_X] = (x - (fdf->map->max_x / 2)) * fdf->map->zoom + (fdf->window_width / 2);
-	start[POS_Y] = (y - (fdf->map->max_y / 2)) * fdf->map->zoom + (fdf->window_height / 2);
-	end[POS_X] = (x + 1 - (fdf->map->max_x / 2)) * fdf->map->zoom + (fdf->window_width / 2);
-	end[POS_Y] = (y + 1 - (fdf->map->max_y / 2)) * fdf->map->zoom + (fdf->window_height / 2);
-}
-
-void draw(t_fdf *fdf)
+void	draw(t_fdf *fdf)
 {
 	int x;
 	int y;
-	int start[2];
-	int end[2];
+	float	axis[4];
+	int		color;
 
 	y = -1;
+	
 	while (++y < fdf->map->max_y)
 	{
 		x = -1;
 		while (++x < fdf->map->max_x)
 		{
-			center_grid(x, y, fdf, start, end);
-			if (x < fdf->map->max_x - 1)
-				bresenham(start[POS_X], start[POS_Y], end[POS_X], start[POS_Y], fdf, fdf->map->coordinates[y][x].color);
-			if (y < fdf->map->max_y - 1)
-				bresenham(start[POS_X], start[POS_Y], start[POS_X], end[POS_Y], fdf, fdf->map->coordinates[y][x].color);
+			color = fdf->map->coordinates[y][x].color;
+			if (x < fdf->map->max_x - 1){
+				set_axis(axis, x, y, true);
+				brasenham(fdf, axis, color);
+			}
+			if (y < fdf->map->max_y - 1){
+				set_axis(axis, x, y, false);
+				brasenham(fdf, axis, color);	
+			}
 		}
 	}
 }
@@ -87,7 +123,7 @@ void draw(t_fdf *fdf)
 void render(t_fdf *fdf)
 {
 	fdf->window = mlx_new_window(fdf->mlx, fdf->window_width, fdf->window_height, WINDOW_NAME);
-	fdf->map->zoom = MIN(fdf->window_width / fdf->map->max_x, fdf->window_height / fdf->map->max_y);
+	fdf->map->zoom = 15;//MIN(fdf->window_width / fdf->map->max_x, fdf->window_height / fdf->map->max_y);
 	draw(fdf);
 	mlx_key_hook(fdf->window, print_keycode, NULL);
 	mlx_loop(fdf->mlx);
