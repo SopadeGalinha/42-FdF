@@ -6,7 +6,7 @@
 /*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 00:31:27 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/09/02 16:18:48 by jhoonca          ###   ########.fr       */
+/*   Updated: 2023/09/04 17:44:18 by jhoonca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,7 @@
 # include <math.h>
 # include <limits.h>
 
-# ifndef WINDOW_NAME
-#  define WINDOW_NAME	 	"FDF"
-# endif
+# define WINDOW_NAME	"42 - FDF - SopadeGalinha"
 
 #define WINDOW_FULL_SCREEN	0
 

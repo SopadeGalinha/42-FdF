@@ -6,7 +6,7 @@
 /*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 01:18:23 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/09/03 11:46:23 by jhoonca          ###   ########.fr       */
+/*   Updated: 2023/09/04 17:43:13 by jhoonca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	put_axis(t_fdf *fdf, float *axis, int color)
 	axis[END_Y] += fdf->window_height / 2;
 }
 
-void	brasenham(t_fdf *fdf, float *axis, int color)
+void	bresenham(t_fdf *fdf, float *axis, int color)
 {
 	float	step_x;
 	float	step_y;
