@@ -6,7 +6,7 @@
 /*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 01:18:23 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/09/04 18:02:28 by jhoonca          ###   ########.fr       */
+/*   Updated: 2023/09/04 20:17:06 by jhoonca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ void	bresenham(t_fdf *fdf, float *axis, int color)
 	axis[END_Z] = fdf->map->coordinates[(int)axis[END_Y]][(int)axis[END_X]].z;
 	
 	fdf->map->zoom = MIN(fdf->window_width / fdf->map->max_x, fdf->window_height / fdf->map->max_y);
-	//zoom
 	axis[START_X] *= fdf->map->zoom;
 	axis[START_Y] *= fdf->map->zoom;
 	axis[END_X] *= fdf->map->zoom;
@@ -92,6 +91,26 @@ void	bresenham(t_fdf *fdf, float *axis, int color)
 		mlx_pixel_put(fdf->mlx, fdf->window, axis[START_X], axis[START_Y], color);
 		axis[START_X] += step_x;
 		axis[START_Y] += step_y;
+	}
+}
+void	center_grid(t_fdf *fdf)
+{
+	int		x;
+	int		y;
+	float	previous_x;
+	float	previous_y;
+
+	y = -1;
+	while (++y < fdf->map->max_y)
+	{
+		x = -1;
+		while (++x < fdf->map->max_x)
+		{
+			previous_x = fdf->map->coordinates[y][x].x;
+			previous_y = fdf->map->coordinates[y][x].y;
+			fdf->map->coordinates[y][x].x = (previous_x - previous_y) * cos(0.523599);
+			fdf->map->coordinates[y][x].y = -fdf->map->coordinates[y][x].z + (previous_x + previous_y) * sin(0.523599);
+		}
 	}
 }
 
@@ -122,27 +141,9 @@ void	draw(t_fdf *fdf)
 	}
 }
 
-void	adjust_pivot(t_fdf *fdf)
-{
-	int x;
-	int y;
-
-	y = -1;
-	while (++y < fdf->map->max_y)
-	{
-		x = -1;
-		while (++x < fdf->map->max_x)
-		{
-			fdf->map->coordinates[y][x].x -= fdf->map->max_x / 2;
-			fdf->map->coordinates[y][x].y -= fdf->map->max_y / 2;
-		}
-	}
-}
-
 void render(t_fdf *fdf)
 {
 	fdf->window = mlx_new_window(fdf->mlx, fdf->window_width, fdf->window_height, WINDOW_NAME);
-	fdf->map->zoom = MIN(fdf->window_width / fdf->map->max_x, fdf->window_height / fdf->map->max_y);
 	draw(fdf);
 	mlx_key_hook(fdf->window, print_keycode, NULL);
 	mlx_loop(fdf->mlx);
