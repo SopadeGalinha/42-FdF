@@ -6,7 +6,7 @@
 /*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 01:18:23 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/09/04 17:43:13 by jhoonca          ###   ########.fr       */
+/*   Updated: 2023/09/04 18:02:28 by jhoonca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,13 @@ void	bresenham(t_fdf *fdf, float *axis, int color)
 	axis[START_Z] = fdf->map->coordinates[(int)axis[START_Y]][(int)axis[START_X]].z;
 	axis[END_Z] = fdf->map->coordinates[(int)axis[END_Y]][(int)axis[END_X]].z;
 	
+	fdf->map->zoom = MIN(fdf->window_width / fdf->map->max_x, fdf->window_height / fdf->map->max_y);
 	//zoom
 	axis[START_X] *= fdf->map->zoom;
 	axis[START_Y] *= fdf->map->zoom;
 	axis[END_X] *= fdf->map->zoom;
 	axis[END_Y] *= fdf->map->zoom;
+	
 	
 	isometric(fdf, axis);
 	put_axis(fdf, axis, color);
@@ -110,12 +112,29 @@ void	draw(t_fdf *fdf)
 			color = fdf->map->coordinates[y][x].color;
 			if (x < fdf->map->max_x - 1){
 				set_axis(axis, x, y, true);
-				brasenham(fdf, axis, color);
+				bresenham(fdf, axis, color);
 			}
 			if (y < fdf->map->max_y - 1){
 				set_axis(axis, x, y, false);
-				brasenham(fdf, axis, color);	
+				bresenham(fdf, axis, color);	
 			}
+		}
+	}
+}
+
+void	adjust_pivot(t_fdf *fdf)
+{
+	int x;
+	int y;
+
+	y = -1;
+	while (++y < fdf->map->max_y)
+	{
+		x = -1;
+		while (++x < fdf->map->max_x)
+		{
+			fdf->map->coordinates[y][x].x -= fdf->map->max_x / 2;
+			fdf->map->coordinates[y][x].y -= fdf->map->max_y / 2;
 		}
 	}
 }
@@ -123,7 +142,7 @@ void	draw(t_fdf *fdf)
 void render(t_fdf *fdf)
 {
 	fdf->window = mlx_new_window(fdf->mlx, fdf->window_width, fdf->window_height, WINDOW_NAME);
-	fdf->map->zoom = 15;//MIN(fdf->window_width / fdf->map->max_x, fdf->window_height / fdf->map->max_y);
+	fdf->map->zoom = MIN(fdf->window_width / fdf->map->max_x, fdf->window_height / fdf->map->max_y);
 	draw(fdf);
 	mlx_key_hook(fdf->window, print_keycode, NULL);
 	mlx_loop(fdf->mlx);
