@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/16 01:18:23 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/09/04 20:17:06 by jhoonca          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../includes/fdf.h"
 
 float mod(float a)
@@ -68,18 +56,15 @@ void	bresenham(t_fdf *fdf, float *axis, int color)
 	float	step_y;
 	int		max;
 
-	axis[START_Z] = fdf->map->coordinates[(int)axis[START_Y]][(int)axis[START_X]].z;
-	axis[END_Z] = fdf->map->coordinates[(int)axis[END_Y]][(int)axis[END_X]].z;
-	
-	fdf->map->zoom = MIN(fdf->window_width / fdf->map->max_x, fdf->window_height / fdf->map->max_y);
+/* 	fdf->map->zoom = MIN(fdf->window_width / fdf->map->max_x, fdf->window_height / fdf->map->max_y);
 	axis[START_X] *= fdf->map->zoom;
 	axis[START_Y] *= fdf->map->zoom;
 	axis[END_X] *= fdf->map->zoom;
 	axis[END_Y] *= fdf->map->zoom;
+ */	
 	
-	
-	isometric(fdf, axis);
-	put_axis(fdf, axis, color);
+	// isometric(fdf, axis);
+	// put_axis(fdf, axis, color);
 	
 	step_x = axis[END_X] - axis[START_X];
 	step_y = axis[END_Y] - axis[START_Y];
@@ -91,26 +76,6 @@ void	bresenham(t_fdf *fdf, float *axis, int color)
 		mlx_pixel_put(fdf->mlx, fdf->window, axis[START_X], axis[START_Y], color);
 		axis[START_X] += step_x;
 		axis[START_Y] += step_y;
-	}
-}
-void	center_grid(t_fdf *fdf)
-{
-	int		x;
-	int		y;
-	float	previous_x;
-	float	previous_y;
-
-	y = -1;
-	while (++y < fdf->map->max_y)
-	{
-		x = -1;
-		while (++x < fdf->map->max_x)
-		{
-			previous_x = fdf->map->coordinates[y][x].x;
-			previous_y = fdf->map->coordinates[y][x].y;
-			fdf->map->coordinates[y][x].x = (previous_x - previous_y) * cos(0.523599);
-			fdf->map->coordinates[y][x].y = -fdf->map->coordinates[y][x].z + (previous_x + previous_y) * sin(0.523599);
-		}
 	}
 }
 
@@ -141,12 +106,124 @@ void	draw(t_fdf *fdf)
 	}
 }
 
+void	set_window(t_fdf *fdf)
+{
+	fdf->mlx = mlx_init();
+	mlx_get_screen_size(fdf->mlx, &(fdf->window_width), &(fdf->window_height));
+	fdf->window_width = fdf->window_width * 0.5;
+	fdf->window_height = fdf->window_width * 0.6;
+	fdf->window = mlx_new_window(fdf->mlx, fdf->window_width, \
+	fdf->window_height, WINDOW_NAME);
+}
+
+void set_pivot(t_fdf *fdf)
+{
+    int x;
+    int y;
+
+    int center_x = fdf->map->max_x / 2;
+    int center_y = fdf->map->max_y / 2;
+
+    y = -1;
+    while (++y < fdf->map->max_y)
+    {
+        x = -1;
+        while (++x < fdf->map->max_x)
+        {
+            fdf->map->coordinates[y][x].x -= center_x;
+            fdf->map->coordinates[y][x].y -= center_y;
+        }
+    }
+}
+
+void	set_limits_end(float *axis, t_fdf *fdf)
+{
+	int	y;
+	int	x;
+	
+	y = -1;
+	while (++y < fdf->map->max_y)
+	{
+		x = -1;
+		while (++x < fdf->map->max_x)
+		{
+			if (axis[END_X] < fdf->map->coordinates[y][x].x)
+				axis[END_X] = fdf->map->coordinates[y][x].x;
+			if (axis[END_Y] < fdf->map->coordinates[y][x].y)
+				axis[END_Y] = fdf->map->coordinates[y][x].y;
+			if (axis[END_Z] < fdf->map->coordinates[y][x].z)
+				axis[END_Z] = fdf->map->coordinates[y][x].z;
+		}
+	}
+}	
+
+void	set_limits_aux(float *axis, t_fdf *fdf)
+{
+	int	y;
+	int	x;
+	
+	y = -1;
+	while (++y < fdf->map->max_y)
+	{
+		x = -1;
+		while (++x < fdf->map->max_x)
+		{
+			if (axis[START_X] > fdf->map->coordinates[y][x].x)
+				axis[START_X] = fdf->map->coordinates[y][x].x;
+			if (axis[START_Y] > fdf->map->coordinates[y][x].y)
+				axis[START_Y] = fdf->map->coordinates[y][x].y;
+			if (axis[START_Z] > fdf->map->coordinates[y][x].z)
+				axis[START_Z] = fdf->map->coordinates[y][x].z;
+		}
+	}
+	set_limits_end(axis, fdf);
+}
+
+void	set_zoom(t_fdf *fdf, float *axis)
+{
+	float	zoom_x;
+	float	zoom_y;
+	float	zoom_z;
+	float	zoom;
+	
+	zoom_x = fdf->window_width / (axis[END_X] - axis[START_X]);
+	zoom_y = fdf->window_height / (axis[END_Y] - axis[START_Y]);
+	if (fabsf(axis[END_Z]) > fabsf(axis[START_Z]))
+		zoom_z = fdf->window_height / fabsf(axis[END_Z]);
+	else
+		zoom_z = fdf->window_height / fabsf(axis[START_Z]);
+	zoom = MIN(zoom_x, zoom_y);
+	fdf->map->zoom = MIN(zoom, zoom_z);
+}
+
+void	set_limits(t_fdf *fdf)
+{
+	float	axis[6];
+	
+	axis[START_X] = (float)INT_MAX;
+	axis[START_Y] = (float)INT_MAX;
+	axis[START_Z] = (float)INT_MAX;
+	axis[END_X] = (float)INT_MIN;
+	axis[END_Y] = (float)INT_MIN;
+	axis[END_Z] = (float)INT_MIN;
+	set_limits_aux(axis, fdf);
+ 	fdf->map->max_x = axis[END_X] - axis[START_X];
+	fdf->map->max_y = axis[END_Y] - axis[START_Y];
+	fdf->map->max_z = axis[END_Z] - axis[START_Z];
+	fdf->map->min_z = axis[START_Z];
+ 
+	set_zoom(fdf, axis);
+}
+
 void render(t_fdf *fdf)
 {
-	fdf->window = mlx_new_window(fdf->mlx, fdf->window_width, fdf->window_height, WINDOW_NAME);
-	draw(fdf);
+	set_window(fdf);
+	set_pivot(fdf);
+	set_limits(fdf);
+	// draw(fdf);
 	mlx_key_hook(fdf->window, print_keycode, NULL);
 	mlx_loop(fdf->mlx);
+
 }
 
 int	main(int ac, char **av)

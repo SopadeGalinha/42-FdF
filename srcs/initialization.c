@@ -6,7 +6,7 @@
 /*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 00:44:11 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/09/04 18:07:44 by jhoonca          ###   ########.fr       */
+/*   Updated: 2023/09/06 18:48:14 by jhoonca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,12 +93,5 @@ void	ft_initialization(t_fdf *fdf, char *map)
 	get_dimensions(fdf, fd);
 	if (!fdf->error_message)
 		set_map(fdf, map);
-	if (!fdf->error_message)
-	{
-		fdf->mlx = mlx_init();
-		mlx_get_screen_size(fdf->mlx, &(fdf->window_width), &(fdf->window_height));
-	 	fdf->window_width = fdf->window_width * 0.6;
-		fdf->window_height = fdf->window_width * 0.6;
- 	}
 	close(fd);
 }
