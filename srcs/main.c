@@ -2,108 +2,111 @@
 
 float mod(float a)
 {
-	return (a < 0 ? -a : a);
+    return (a < 0 ? -a : a);
 }
 
-int	print_keycode(int key, void *param)
+int print_keycode(int key, void *param)
 {
-	if (key < 0)
-		param = NULL;
-	if (key == 65307)
-		exit(0);
-	printf("key: %d\n", key);
-	return (0);
+    if (key < 0)
+        param = NULL;
+    if (key == 65307)
+        exit(0);
+    printf("key: %d\n", key);
+    return (0);
 }
 
-void	set_axis(float *axis, int x, int y, bool line)
+void set_axis(float *axis, int x, int y, bool line)
 {
-	axis[START_X] = x;
-	axis[START_Y] = y;
-	axis[END_X] = x;
-	axis[END_Y] = y + 1;
-	if (line)
-		axis[END_X] = x + 1;
-	if (line)
-		axis[END_Y] = y;
+    axis[START_X] = x;
+    axis[START_Y] = y;
+    axis[END_X] = x;
+    axis[END_Y] = y + 1;
+    if (line)
+        axis[END_X] = x + 1;
+    if (line)
+        axis[END_Y] = y;
 }
 
-void	isometric(t_fdf *fdf, float *axis)
-{
-	float	previous_x;
-	float	previous_y;
+#define ISOMETRIC_ANGLE 0.523599
 
-	previous_x = axis[START_X];
-	previous_y = axis[START_Y];
-	axis[START_X] = (previous_x - previous_y) * cos(0.523599);
-	axis[START_Y] = -axis[START_Z] + (previous_x + previous_y) * sin(0.523599);
-	previous_x = axis[END_X];
-	previous_y = axis[END_Y];
-	axis[END_X] = (previous_x - previous_y) * cos(0.523599);
-	axis[END_Y] = -axis[END_Z] + (previous_x + previous_y) * sin(0.523599);
+void apply_isometric(t_fdf *fdf, float *axis) {
+    float prev_x = axis[START_X];
+    float prev_y = axis[START_Y];
+
+    axis[START_X] = (prev_x - prev_y) * cos(ISOMETRIC_ANGLE);
+    axis[START_Y] = -axis[START_Z] + (prev_x + prev_y) * sin(ISOMETRIC_ANGLE);
+
+    float center_x = fdf->map->max_x * 0.5;
+    float center_y = fdf->map->max_y * 0.5;
+
+    axis[START_X] += center_x;
+    axis[START_Y] += center_y;
+
+    prev_x = axis[END_X];
+    prev_y = axis[END_Y];
+
+    axis[END_X] = (prev_x - prev_y) * cos(ISOMETRIC_ANGLE);
+    axis[END_Y] = -axis[END_Z] + (prev_x + prev_y) * sin(ISOMETRIC_ANGLE);
+
+    axis[END_X] += center_x;
+    axis[END_Y] += center_y;
 }
 
-void	put_axis(t_fdf *fdf, float *axis, int color)
-{
-	axis[START_X] += fdf->window_width / 2;
-	axis[START_Y] += fdf->window_height / 2;
-	axis[END_X] += fdf->window_width / 2;
-	axis[END_Y] += fdf->window_height / 2;
+// Function to draw a line using Bresenham's algorithm
+void draw_line(t_fdf *fdf, float *axis, int color) {
+    float step_x = axis[END_X] - axis[START_X];
+    float step_y = axis[END_Y] - axis[START_Y];
+    int max = MAX(mod(step_x), mod(step_y));
+
+    step_x /= max;
+    step_y /= max;
+
+    while ((int)(axis[START_X] - axis[END_X]) || (int)(axis[START_Y] - axis[END_Y])) {
+        mlx_pixel_put(fdf->mlx, fdf->window, axis[START_X], axis[START_Y], color);
+        axis[START_X] += step_x;
+        axis[START_Y] += step_y;
+    }
 }
 
-void	bresenham(t_fdf *fdf, float *axis, int color)
-{
-	float	step_x;
-	float	step_y;
-	int		max;
+// Function to draw the map
 
-/* 	fdf->map->zoom = MIN(fdf->window_width / fdf->map->max_x, fdf->window_height / fdf->map->max_y);
-	axis[START_X] *= fdf->map->zoom;
-	axis[START_Y] *= fdf->map->zoom;
-	axis[END_X] *= fdf->map->zoom;
-	axis[END_Y] *= fdf->map->zoom;
- */	
-	
-	// isometric(fdf, axis);
-	// put_axis(fdf, axis, color);
-	
-	step_x = axis[END_X] - axis[START_X];
-	step_y = axis[END_Y] - axis[START_Y];
-	max = MAX(mod(step_x), mod(step_y));
-	step_x /= max;
-	step_y /= max;
-	while ((int)(axis[START_X] - axis[END_X]) || (int)(axis[START_Y] - axis[END_Y]))
-	{
-		mlx_pixel_put(fdf->mlx, fdf->window, axis[START_X], axis[START_Y], color);
-		axis[START_X] += step_x;
-		axis[START_Y] += step_y;
-	}
-}
+void draw_map(t_fdf *fdf) {
+    int x, y;
+    float axis[4];
+    int color;
+    int center_x = (fdf->map->max_x * fdf->map->zoom) / 2;
+    int center_y = (fdf->map->max_y * fdf->map->zoom) / 2;
 
-void	draw(t_fdf *fdf)
-{
-	int x;
-	int y;
-	float	axis[4];
-	int		color;
+    y = -1;
+    while (++y < fdf->map->max_y) {
+        x = -1;
+        while (++x < fdf->map->max_x) {
+            color = fdf->map->coordinates[y][x].color;
 
-	y = -1;
-	
-	while (++y < fdf->map->max_y)
-	{
-		x = -1;
-		while (++x < fdf->map->max_x)
-		{
-			color = fdf->map->coordinates[y][x].color;
-			if (x < fdf->map->max_x - 1){
-				set_axis(axis, x, y, true);
-				bresenham(fdf, axis, color);
-			}
-			if (y < fdf->map->max_y - 1){
-				set_axis(axis, x, y, false);
-				bresenham(fdf, axis, color);	
-			}
-		}
-	}
+            // Calculate position with zoom and centralization
+            axis[START_X] = x * fdf->map->zoom - center_x + (fdf->window_width / 2);
+            axis[START_Y] = y * fdf->map->zoom - center_y + (fdf->window_height / 2);
+            axis[END_X] = (x + 1) * fdf->map->zoom - center_x + (fdf->window_width / 2);
+            axis[END_Y] = y * fdf->map->zoom - center_y + (fdf->window_height / 2);
+
+            // Apply isometric projection
+            apply_isometric(fdf, axis);
+
+            if (x + 1 < fdf->map->max_x)
+                draw_line(fdf, axis, color);
+
+            axis[START_X] = x * fdf->map->zoom - center_x + (fdf->window_width / 2);
+            axis[START_Y] = y * fdf->map->zoom - center_y + (fdf->window_height / 2);
+            axis[END_X] = x * fdf->map->zoom - center_x + (fdf->window_width / 2);
+            axis[END_Y] = (y + 1) * fdf->map->zoom - center_y + (fdf->window_height / 2);
+
+            // Apply isometric projection
+            apply_isometric(fdf, axis);
+
+            if (y + 1 < fdf->map->max_y)
+                draw_line(fdf, axis, color);
+        }
+    }
 }
 
 void	set_window(t_fdf *fdf)
@@ -116,25 +119,33 @@ void	set_window(t_fdf *fdf)
 	fdf->window_height, WINDOW_NAME);
 }
 
-void set_pivot(t_fdf *fdf)
-{
-    int x;
-    int y;
+void set_pivot(t_fdf *fdf) {
+    int x, y;
+    int sum_x = 0;
+    int sum_y = 0;
 
-    int center_x = fdf->map->max_x / 2;
-    int center_y = fdf->map->max_y / 2;
+    // Calculate the sum of all x and y coordinates
+    for (y = 0; y < fdf->map->max_y; y++) {
+        for (x = 0; x < fdf->map->max_x; x++) {
+            sum_x += fdf->map->coordinates[y][x].x;
+            sum_y += fdf->map->coordinates[y][x].y;
+        }
+    }
 
-    y = -1;
-    while (++y < fdf->map->max_y)
-    {
-        x = -1;
-        while (++x < fdf->map->max_x)
-        {
-            fdf->map->coordinates[y][x].x -= center_x;
-            fdf->map->coordinates[y][x].y -= center_y;
+    // Calculate the center based on the window size
+    int center_x = fdf->window_width / 2;
+    int center_y = fdf->window_height / 2;
+
+    // Adjust the coordinates based on the center
+    for (y = 0; y < fdf->map->max_y; y++) {
+        for (x = 0; x < fdf->map->max_x; x++) {
+            fdf->map->coordinates[y][x].x -= sum_x / (fdf->map->max_x * fdf->map->max_y);
+            fdf->map->coordinates[y][x].y -= sum_y / (fdf->map->max_x * fdf->map->max_y);
         }
     }
 }
+
+
 
 void	set_limits_end(float *axis, t_fdf *fdf)
 {
@@ -194,6 +205,7 @@ void	set_zoom(t_fdf *fdf, float *axis)
 		zoom_z = fdf->window_height / fabsf(axis[START_Z]);
 	zoom = MIN(zoom_x, zoom_y);
 	fdf->map->zoom = MIN(zoom, zoom_z);
+	fdf->map->zoom = fdf->map->zoom * 0.8;
 }
 
 void	set_limits(t_fdf *fdf)
@@ -220,7 +232,7 @@ void render(t_fdf *fdf)
 	set_window(fdf);
 	set_pivot(fdf);
 	set_limits(fdf);
-	// draw(fdf);
+	draw_map(fdf);
 	mlx_key_hook(fdf->window, print_keycode, NULL);
 	mlx_loop(fdf->mlx);
 
