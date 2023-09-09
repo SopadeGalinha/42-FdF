@@ -1,253 +1,195 @@
+/* *************************************************************************** */
+/*                                                                             */
+/*                                                         :::      ::::::::   */
+/*   new.c                                               :+:      :+:    :+:   */
+/*                                                     +:+ +:+         +:+     */
+/*   By: jhoonca <jhogonca@student.42porto.com>      +#+  +:+       +#+        */
+/*                                                 +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/09 17:33:27 by jhogonca           #+#    #+#             */
+/*   Updated: 2023/09/09 17:33:28 by jhogonca          ###   ########.fr       */
+/*                                                                             */
+/* *************************************************************************** */
+
 #include "../includes/fdf.h"
 
-float mod(float a)
+int key_down(int keycode, t_fdf *fdf)
 {
-    return (a < 0 ? -a : a);
+	if (keycode == 0xFF1B)
+		close_app(fdf);
+	return (0);
 }
-
-int print_keycode(int key, void *param)
+void set_hooks(t_fdf fdf)
 {
-    if (key < 0)
-        param = NULL;
-    if (key == 65307)
-        exit(0);
-    printf("key: %d\n", key);
-    return (0);
+	mlx_hook(fdf.win, KeyPress, KeyPressMask, key_down, &fdf);
 }
 
-void set_axis(float *axis, int x, int y, bool line)
+void close_app(t_fdf *fdf)
 {
-    axis[START_X] = x;
-    axis[START_Y] = y;
-    axis[END_X] = x;
-    axis[END_Y] = y + 1;
-    if (line)
-        axis[END_X] = x + 1;
-    if (line)
-        axis[END_Y] = y;
+	mlx_loop_end(fdf->mlx);
+	mlx_destroy_window(fdf->mlx, fdf->win);
+	mlx_destroy_display(fdf->mlx);
+	free(fdf->mlx);
+	free(fdf->coords);
+	free(fdf->color);
+	free(fdf->height_colors);
+	exit(0);
 }
 
-#define ISOMETRIC_ANGLE 0.523599
-
-void apply_isometric(t_fdf *fdf, float *axis) {
-    float prev_x = axis[START_X];
-    float prev_y = axis[START_Y];
-
-    axis[START_X] = (prev_x - prev_y) * cos(ISOMETRIC_ANGLE);
-    axis[START_Y] = -axis[START_Z] + (prev_x + prev_y) * sin(ISOMETRIC_ANGLE);
-
-    float center_x = fdf->map->max_x * 0.5;
-    float center_y = fdf->map->max_y * 0.5;
-
-    axis[START_X] += center_x;
-    axis[START_Y] += center_y;
-
-    prev_x = axis[END_X];
-    prev_y = axis[END_Y];
-
-    axis[END_X] = (prev_x - prev_y) * cos(ISOMETRIC_ANGLE);
-    axis[END_Y] = -axis[END_Z] + (prev_x + prev_y) * sin(ISOMETRIC_ANGLE);
-
-    axis[END_X] += center_x;
-    axis[END_Y] += center_y;
-}
-
-// Function to draw a line using Bresenham's algorithm
-void draw_line(t_fdf *fdf, float *axis, int color) {
-    float step_x = axis[END_X] - axis[START_X];
-    float step_y = axis[END_Y] - axis[START_Y];
-    int max = MAX(mod(step_x), mod(step_y));
-
-    step_x /= max;
-    step_y /= max;
-
-    while ((int)(axis[START_X] - axis[END_X]) || (int)(axis[START_Y] - axis[END_Y])) {
-        mlx_pixel_put(fdf->mlx, fdf->window, axis[START_X], axis[START_Y], color);
-        axis[START_X] += step_x;
-        axis[START_Y] += step_y;
-    }
-}
-
-// Function to draw the map
-
-void draw_map(t_fdf *fdf) {
-    int x, y;
-    float axis[4];
-    int color;
-    int center_x = (fdf->map->max_x * fdf->map->zoom) / 2;
-    int center_y = (fdf->map->max_y * fdf->map->zoom) / 2;
-
-    y = -1;
-    while (++y < fdf->map->max_y) {
-        x = -1;
-        while (++x < fdf->map->max_x) {
-            color = fdf->map->coordinates[y][x].color;
-
-            // Calculate position with zoom and centralization
-            axis[START_X] = x * fdf->map->zoom - center_x + (fdf->window_width / 2);
-            axis[START_Y] = y * fdf->map->zoom - center_y + (fdf->window_height / 2);
-            axis[END_X] = (x + 1) * fdf->map->zoom - center_x + (fdf->window_width / 2);
-            axis[END_Y] = y * fdf->map->zoom - center_y + (fdf->window_height / 2);
-
-            // Apply isometric projection
-            apply_isometric(fdf, axis);
-
-            if (x + 1 < fdf->map->max_x)
-                draw_line(fdf, axis, color);
-
-            axis[START_X] = x * fdf->map->zoom - center_x + (fdf->window_width / 2);
-            axis[START_Y] = y * fdf->map->zoom - center_y + (fdf->window_height / 2);
-            axis[END_X] = x * fdf->map->zoom - center_x + (fdf->window_width / 2);
-            axis[END_Y] = (y + 1) * fdf->map->zoom - center_y + (fdf->window_height / 2);
-
-            // Apply isometric projection
-            apply_isometric(fdf, axis);
-
-            if (y + 1 < fdf->map->max_y)
-                draw_line(fdf, axis, color);
-        }
-    }
-}
-
-void	set_window(t_fdf *fdf)
+static void draw_map(t_fdf *fdf, t_points *pts)
 {
-	fdf->mlx = mlx_init();
-	mlx_get_screen_size(fdf->mlx, &(fdf->window_width), &(fdf->window_height));
-	fdf->window_width = fdf->window_width * 0.5;
-	fdf->window_height = fdf->window_width * 0.6;
-	fdf->window = mlx_new_window(fdf->mlx, fdf->window_width, \
-	fdf->window_height, WINDOW_NAME);
-}
+	t_draw line;
+	int i;
 
-void set_pivot(t_fdf *fdf) {
-    int x, y;
-    int sum_x = 0;
-    int sum_y = 0;
-
-    // Calculate the sum of all x and y coordinates
-    for (y = 0; y < fdf->map->max_y; y++) {
-        for (x = 0; x < fdf->map->max_x; x++) {
-            sum_x += fdf->map->coordinates[y][x].x;
-            sum_y += fdf->map->coordinates[y][x].y;
-        }
-    }
-
-    // Calculate the center based on the window size
-    int center_x = fdf->window_width / 2;
-    int center_y = fdf->window_height / 2;
-
-    // Adjust the coordinates based on the center
-    for (y = 0; y < fdf->map->max_y; y++) {
-        for (x = 0; x < fdf->map->max_x; x++) {
-            fdf->map->coordinates[y][x].x -= sum_x / (fdf->map->max_x * fdf->map->max_y);
-            fdf->map->coordinates[y][x].y -= sum_y / (fdf->map->max_x * fdf->map->max_y);
-        }
-    }
-}
-
-
-
-void	set_limits_end(float *axis, t_fdf *fdf)
-{
-	int	y;
-	int	x;
-	
-	y = -1;
-	while (++y < fdf->map->max_y)
+	i = 0;
+	while (pts[i].x != INT_MIN)
 	{
-		x = -1;
-		while (++x < fdf->map->max_x)
+		if (i % fdf->map_size.x != fdf->map_size.x - 1)
 		{
-			if (axis[END_X] < fdf->map->coordinates[y][x].x)
-				axis[END_X] = fdf->map->coordinates[y][x].x;
-			if (axis[END_Y] < fdf->map->coordinates[y][x].y)
-				axis[END_Y] = fdf->map->coordinates[y][x].y;
-			if (axis[END_Z] < fdf->map->coordinates[y][x].z)
-				axis[END_Z] = fdf->map->coordinates[y][x].z;
+			line.p0 = (t_points){pts[i].x, pts[i].y};
+			line.p1 = (t_points){pts[i + 1].x, pts[i + 1].y};
+			draw_line(fdf, line, fdf->colors[i], fdf->colors[i + 1]);
 		}
-	}
-}	
-
-void	set_limits_aux(float *axis, t_fdf *fdf)
-{
-	int	y;
-	int	x;
-	
-	y = -1;
-	while (++y < fdf->map->max_y)
-	{
-		x = -1;
-		while (++x < fdf->map->max_x)
+		if (i + fdf->map_size.x < fdf->map_size.x * fdf->map_size.y)
 		{
-			if (axis[START_X] > fdf->map->coordinates[y][x].x)
-				axis[START_X] = fdf->map->coordinates[y][x].x;
-			if (axis[START_Y] > fdf->map->coordinates[y][x].y)
-				axis[START_Y] = fdf->map->coordinates[y][x].y;
-			if (axis[START_Z] > fdf->map->coordinates[y][x].z)
-				axis[START_Z] = fdf->map->coordinates[y][x].z;
+			line.p0 = (t_points){pts[i].x, pts[i].y};
+			line.p1 = (t_points){pts[i + fdf->map_size.x].x,
+								pts[i + fdf->map_size.x].y};
+			draw_line(fdf, line, fdf->colors[i],
+					fdf->colors[i + fdf->map_size.x]);
 		}
+		i++;
 	}
-	set_limits_end(axis, fdf);
 }
 
-void	set_zoom(t_fdf *fdf, float *axis)
+static void isometric_projection(t_fdf fdf, t_points *points_to_draw)
 {
-	float	zoom_x;
-	float	zoom_y;
-	float	zoom_z;
-	float	zoom;
-	
-	zoom_x = fdf->window_width / (axis[END_X] - axis[START_X]);
-	zoom_y = fdf->window_height / (axis[END_Y] - axis[START_Y]);
-	if (fabsf(axis[END_Z]) > fabsf(axis[START_Z]))
-		zoom_z = fdf->window_height / fabsf(axis[END_Z]);
+	while (fdf.coords->x != INT_MIN)
+	{
+		points_to_draw->x = fdf.coords->x * fdf.zoom + fdf.offset.x;
+		points_to_draw->y = -fdf.coords->z * fdf.zoom + fdf.offset.y;
+		fdf.coords++;
+		points_to_draw++;
+	}
+	points_to_draw->x = INT_MIN;
+}
+
+void refresh_image(t_fdf *fdf)
+{
+	t_points *points_to_draw;
+
+	points_to_draw = malloc(sizeof(t_points) * (fdf->map_size.x * fdf->map_size.y + 1));
+	isometric_projection(*fdf, points_to_draw);
+	draw_map(fdf, points_to_draw);
+	free(points_to_draw);
+}
+
+static void initialize_bresenham(t_bresenham *bresenham, t_draw line)
+{
+	bresenham->dx = abs(line.p1.x - line.p0.x);
+	bresenham->dy = abs(line.p1.y - line.p0.y);
+	if (line.p0.x < line.p1.x)
+		bresenham->sx = 1;
 	else
-		zoom_z = fdf->window_height / fabsf(axis[START_Z]);
-	zoom = MIN(zoom_x, zoom_y);
-	fdf->map->zoom = MIN(zoom, zoom_z);
-	fdf->map->zoom = fdf->map->zoom * 0.8;
+		bresenham->sx = -1;
+	if (line.p0.y < line.p1.y)
+		bresenham->sy = 1;
+	else
+		bresenham->sy = -1;
+	bresenham->err = bresenham->dx - bresenham->dy;
 }
 
-void	set_limits(t_fdf *fdf)
+static void fbresenham(t_bresenham *bresenham, t_draw *line)
 {
-	float	axis[6];
+	bresenham->e2 = 2 * bresenham->err;
+	if (bresenham->e2 > -bresenham->dy)
+	{
+		bresenham->err -= bresenham->dy;
+		line->p0.x += bresenham->sx;
+	}
+	if (bresenham->e2 < bresenham->dx)
+	{
+		bresenham->err += bresenham->dx;
+		line->p0.y += bresenham->sy;
+	}
+}
+
+void draw_line(t_fdf *fdf, t_draw line, int c1, int c2)
+{
+	t_bresenham bresenham;
+	int color;
+	float t;
+
+	initialize_bresenham(&bresenham, line);
+	t = 0.0;
+	while (line.p0.x != line.p1.x || line.p0.y != line.p1.y)
+	{
+		color = interpolate_color(c1, c2, t);
+		mlx_pixel_put(fdf->mlx, fdf->win, line.p0.x, line.p0.y, color);
+		fbresenham(&bresenham, &line);
+		t += 1.0 / (sqrt(bresenham.dx * bresenham.dx + bresenham.dy * bresenham.dy) + 1);
+	}
+	color = interpolate_color(c1, c2, t);
+	mlx_pixel_put(fdf->mlx, fdf->win, line.p0.x, line.p0.y, color);
+}
+
+int interpolate_color(int color1, int color2, float t)
+{
+	int r1 = (color1 >> 16) & 0xFF;
+	int g1 = (color1 >> 8) & 0xFF;
+	int b1 = color1 & 0xFF;
 	
-	axis[START_X] = (float)INT_MAX;
-	axis[START_Y] = (float)INT_MAX;
-	axis[START_Z] = (float)INT_MAX;
-	axis[END_X] = (float)INT_MIN;
-	axis[END_Y] = (float)INT_MIN;
-	axis[END_Z] = (float)INT_MIN;
-	set_limits_aux(axis, fdf);
- 	fdf->map->max_x = axis[END_X] - axis[START_X];
-	fdf->map->max_y = axis[END_Y] - axis[START_Y];
-	fdf->map->max_z = axis[END_Z] - axis[START_Z];
-	fdf->map->min_z = axis[START_Z];
- 
-	set_zoom(fdf, axis);
+	int r2 = (color2 >> 16) & 0xFF;
+	int g2 = (color2 >> 8) & 0xFF;
+	int b2 = color2 & 0xFF;
+	
+	int r = r1 + (int)((r2 - r1) * t);
+	int g = g1 + (int)((g2 - g1) * t);
+	int b = b1 + (int)((b2 - b1) * t);
+	
+	return ((r << 16) | (g << 8) | b);
 }
 
-void render(t_fdf *fdf)
+void create_height_colors(t_fdf fdf)
 {
-	set_window(fdf);
-	set_pivot(fdf);
-	set_limits(fdf);
-	draw_map(fdf);
-	mlx_key_hook(fdf->window, print_keycode, NULL);
-	mlx_loop(fdf->mlx);
+	int c_highest;
+	int c_lowest;
+	float t;
 
+	c_highest = 0xFF0000;
+	c_lowest = 0x0000FF;
+	while (fdf.coords->x != INT_MIN)
+	{
+		t = (fdf.coords->z - fdf.limits.min_z) / (fdf.limits.max_z - fdf.limits.min_z);
+		*fdf.height_colors = interpolate_color(c_lowest, c_highest, t);
+		fdf.height_colors++;
+		fdf.coords++;
+	}
 }
 
-int	main(int ac, char **av)
+void switch_colors(t_fdf *fdf)
 {
-	t_fdf	fdf;
+	if (fdf->colors == fdf->color)
+		fdf->colors = fdf->height_colors;
+	else
+		fdf->colors = fdf->color;
+}
+
+
+int main(int ac, char **av)
+{
+	t_fdf fdf;
+	char *error;
+
 	if (ac != 2)
-		return (write(1, "Error: Invalid number of arguments\n", 35));
-	fdf = (t_fdf){.map = &(t_map){.coordinates = &(t_point *){0}}};
-	ft_initialization(&fdf, av[1]);
-	if (!fdf.error_message)
-		render(&fdf);
-	else
-		printf("error_message: %s\n", fdf.error_message);
+		return (write(1, ERROR_INPUT, ft_strlen(ERROR_INPUT)));
+	fdf = (t_fdf){0};
+	error = init(av[1], &fdf);
+	if (error)
+		return (write(1, error, ft_strlen(error)));
+	set_display(&fdf);
+	
+	refresh_image(&fdf);
+	set_hooks(fdf);
+	mlx_loop(fdf.mlx);
 	return (0);
 }

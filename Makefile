@@ -5,29 +5,30 @@
 #                                                     +:+ +:+         +:+      #
 #    By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/07/25 20:04:30 by jhogonca          #+#    #+#              #
-#    Updated: 2023/08/29 18:48:56 by jhoonca          ###   ########.fr        #
+#    Created: 2023/09/09 17:25:39 by jhoonca           #+#    #+#              #
+#    Updated: 2023/09/09 22:59:25 by jhoonca          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = fdf
 
-SRCS_LIST = main.c initialization.c ft_atoi_base.c init_utils.c
+SRCS_DIR	= srcs/
+OBJS_DIR	= srcs/objs/
+LIBFT_DIR	= includes/libft/
+MLX_DIR		= includes/minilibx/
 
-SRCS_DIR = srcs/
-OBJS_DIR = srcs/objs/
-LIBFT_DIR = includes/libft/
+SRCS_LIST = main.c init.c init_utils.c set_display.c
 
 SRCS = $(addprefix $(SRCS_DIR), $(SRCS_LIST))
 OBJS = $(addprefix $(OBJS_DIR), $(SRCS_LIST:.c=.o))
 
 LIBFT = $(addprefix $(LIBFT_DIR), libft.a)
-MLX	= $(addprefix $(MLX_DIR), libmlx.a)
-MLX_DIR = includes/minilibx/
+LIBMLX = $(addprefix $(MLX_DIR), libmlx.a)
+
 
 CC = cc
 RM = rm -rf
-CFLAGS = -g #-fsanitize=address
+CFLAGS = -g #-Wall -Wextra -Werror
 
 all: $(NAME)
 

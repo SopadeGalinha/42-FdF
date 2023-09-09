@@ -12,50 +12,88 @@
 
 #include "../includes/fdf.h"
 
-static int	ft_arrlen(char **arr);
-void		ft_free_split(char **split);
-
-void	get_dimensions(t_fdf *fdf, int fd)
+void ft_free_array(char **split_ptr)
 {
-	char	*line;
-	char	**split;
+	int i;
 
-	line = get_next_line(fd);
-	while (line)
+	i = 0;
+	while (split_ptr[i])
 	{
-		fdf->map->max_y++;
-		split = ft_split(line, ' ');
-		if (fdf->map->max_x == 0)
-			fdf->map->max_x = ft_arrlen(split);
-		else if (fdf->map->max_x != ft_arrlen(split))
-			fdf->error_message = "Error: Invalid map 1\n";
-		free(line);
-		ft_free_split(split);
-		if (fdf->error_message)
-			return ;
-		line = get_next_line(fd);
+		free(split_ptr[i]);
+		i++;
 	}
-	if ((fdf->map->max_y < 2 || fdf->map->max_x < 2)
-		|| (fdf->map->max_y > 1000 || fdf->map->max_x > 1000))
-			fdf->error_message = "Error: Invalid map 2\n";
+	free(split_ptr);
 }
 
-void	ft_free_split(char **split)
+size_t	ft_count_char(char *str, char c)
 {
 	int	i;
+	int	count;
 
 	i = -1;
-	while (split[++i])
-		free(split[i]);
-	free(split);
+	count = 0;
+	while (str[++i])
+		if (str[i] == c)
+			count++;
+	return (count);
 }
 
-static int	ft_arrlen(char **arr)
+bool	ft_contains(const char *haystack, const char *needle)
+{
+	int	h;
+	int	n;
+
+	n = 0;
+	h = -1;
+	if (needle[n] == 0)
+		return (false);
+	while (haystack[++h])
+	{
+		while (haystack[h + n] && haystack[h + n] == needle[n])
+			n++;
+		if (!(needle[n]))
+			return (true);
+		n = 0;
+	}
+	return (false);
+}
+
+static int	is_in_base(char c, const char *base)
 {
 	int	i;
 
 	i = 0;
-	while (arr[i] && arr[i][0] != '\n')
+	while (base[i])
+	{
+		if (base[i] == c)
+			return (i);
 		i++;
+	}
+	return (-1);
+}
+
+int	ft_atoi_base(const char *nptr, const char *base)
+{
+	unsigned int	value;
+	int				base_len;
+
+	base_len = ft_strlen(base);
+	value = 0;
+	while (is_in_base(ft_tolower(*nptr), base) != -1)
+	{
+		value = value * base_len + is_in_base(ft_tolower(*nptr), base);
+		nptr++;
+	}
+	return ((int)value);
+}
+
+/* size_t	ft_strlen(const char *s)
+{
+	size_t	i;
+
+	i = -1;
+	while (s[++i])
+		;
 	return (i);
 }
+ */
