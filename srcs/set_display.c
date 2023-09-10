@@ -48,7 +48,7 @@ void apply_rotation(t_coords *coords, t_points direction)
 	while (coords->x != INT_MIN)
 	{
 		*coords = rotate(*coords, -angle[X], AXIS_Z);
-		*coords = rotate(*coords, -angle[Y], AXIS_X);
+		*coords = rotate(*coords, angle[Y], AXIS_X);
 		coords++;
 	}
 }

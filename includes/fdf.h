@@ -99,13 +99,6 @@ typedef struct s_fdf {
 	int			window_height;
 }				t_fdf;
 
-# ifndef WINX
-#  define WINX 1200
-# endif
-# ifndef WINY
-#  define WINY 700
-# endif
-
 void ft_free_array(char **split_ptr);
 int			list_length(char **list);
 int			points_in_line(char	*line);
