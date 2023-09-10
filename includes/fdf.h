@@ -95,6 +95,8 @@ typedef struct s_fdf {
 	int			*height_colors;
 	t_points	map_size;
 	t_limits	limits;
+	int			window_width;
+	int			window_height;
 }				t_fdf;
 
 # ifndef WINX
@@ -109,6 +111,7 @@ int			list_length(char **list);
 int			points_in_line(char	*line);
 int			ft_strpos(char *str, char c);
 int	ft_atoi_base(const char *nptr, const char *base);
+void	set_graphics(t_fdf *fdf);
 
 void    set_display(t_fdf *fdf);
 
@@ -128,7 +131,6 @@ size_t	ft_count_char(char *str, char c);
 bool	ft_contains(const char *haystack, const char *needle);
 
 void		draw_line(t_fdf *fdf, t_draw line, int c1, int c2);
-
-void		refresh_image(t_fdf *fdf);
+void		 render(t_fdf *fdf);
 
 #endif

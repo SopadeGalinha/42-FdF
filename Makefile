@@ -17,7 +17,7 @@ OBJS_DIR	= srcs/objs/
 LIBFT_DIR	= includes/libft/
 MLX_DIR		= includes/minilibx/
 
-SRCS_LIST = main.c init.c init_utils.c set_display.c
+SRCS_LIST = main.c init.c init_utils.c set_display.c set_graphics.c render.c
 
 SRCS = $(addprefix $(SRCS_DIR), $(SRCS_LIST))
 OBJS = $(addprefix $(OBJS_DIR), $(SRCS_LIST:.c=.o))
