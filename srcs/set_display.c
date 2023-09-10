@@ -6,7 +6,7 @@
 /*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/09 22:57:38 by jhoonca           #+#    #+#             */
-/*   Updated: 2023/09/10 00:05:15 by jhoonca          ###   ########.fr       */
+/*   Updated: 2023/09/10 21:45:14 by jhoonca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,24 +36,24 @@ static t_coords	rotate(t_coords point, float angle, int axis)
 		point.x = temp[X] * cos_theta - temp[Y] * sin_theta;
 		point.y = temp[X] * sin_theta + temp[Y] * cos_theta;
 	}
-	return point;
+	return (point);
 }
 
-static void apply_rotation(t_coords *coords, t_points direction)
+static void	apply_rotation(t_coords *coords, t_points direction)
 {
 	float	angle[2];
-	
+
 	angle[X] = direction.x;
 	angle[Y] = direction.y;
 	while (coords->x != INT_MIN)
 	{
-		*coords = rotate(*coords, -angle[X], AXIS_Z);
-		*coords = rotate(*coords, angle[Y], AXIS_X);
+		*coords = rotate(*coords, angle[X], AXIS_Z);
+		*coords = rotate(*coords, -angle[Y], AXIS_X);
 		coords++;
 	}
 }
 
-static void center_map(t_coords *points, t_points map_size)
+static void	center_map(t_coords *points, t_points map_size)
 {
 	while (points->x != INT_MIN)
 	{
@@ -63,7 +63,7 @@ static void center_map(t_coords *points, t_points map_size)
 	}
 }
 
-static void set_limits(t_coords *coords, t_limits *limits)
+static void	set_limits(t_coords *coords, t_limits *limits)
 {
 	limits->min_x = (float)INT_MAX;
 	limits->max_x = (float)INT_MIN;
@@ -89,7 +89,7 @@ static void set_limits(t_coords *coords, t_limits *limits)
 	}
 }
 
-void    set_display(t_fdf *fdf)
+void	set_display(t_fdf *fdf)
 {
 	center_map(fdf->coords, fdf->map_size);
 	apply_rotation(fdf->coords, (t_points){45, 35});

@@ -12,16 +12,13 @@
 
 #include "../includes/fdf.h"
 
-void ft_free_array(char **split_ptr)
+void	ft_free_array(char **split_ptr)
 {
-	int i;
+	int	i;
 
-	i = 0;
-	while (split_ptr[i])
-	{
+	i = -1;
+	while (split_ptr[++i])
 		free(split_ptr[i]);
-		i++;
-	}
 	free(split_ptr);
 }
 
@@ -62,13 +59,10 @@ static int	is_in_base(char c, const char *base)
 {
 	int	i;
 
-	i = 0;
-	while (base[i])
-	{
+	i = -1;
+	while (base[++i])
 		if (base[i] == c)
 			return (i);
-		i++;
-	}
 	return (-1);
 }
 

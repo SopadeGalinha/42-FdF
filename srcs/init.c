@@ -6,27 +6,30 @@
 /*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/09 20:00:48 by jhoonca           #+#    #+#             */
-/*   Updated: 2023/09/09 22:46:54 by jhoonca          ###   ########.fr       */
+/*   Updated: 2023/09/10 21:40:22 by jhoonca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fdf.h"
 
-static void set_map(char *map, t_coords *pos, int *clrs, int *max);
-static char *get_coords(char *fdf_path, t_points *map_size);
+static char	*get_coords(char *fdf_path, t_points *map_size);
+static void	set_map(char *map, t_coords *pos, int *clrs, int *max);
 
-char *init(char *map, t_fdf *fdf)
+char	*init(char *map, t_fdf *fdf)
 {
-	char    	*error;
-    int        max[2];
+	int		max[2];
 
-	if (!ft_contains(map, ".fdf") || ft_strlen(map) < 5 || ft_count_char(map, '.') != 1)
+	if (!ft_contains(map, ".fdf") || ft_strlen(map) < 5
+		|| ft_count_char(map, '.') != 1)
 		return (ERROR_EXT);
 	if (get_coords(map, &fdf->map_size))
 		return (ERROR_MAP);
-	fdf->coords = malloc(sizeof(t_coords) * (fdf->map_size.x * fdf->map_size.y + 1));
-	fdf->color = malloc(sizeof(int) * (fdf->map_size.x * fdf->map_size.y + 1));
-	fdf->height_colors = malloc(sizeof(int) * (fdf->map_size.x * fdf->map_size.y + 1));
+	fdf->coords = malloc(sizeof(t_coords) * \
+		(fdf->map_size.x * fdf->map_size.y + 1));
+	fdf->color = malloc(sizeof(int) * \
+		(fdf->map_size.x * fdf->map_size.y + 1));
+	fdf->height_colors = malloc(sizeof(int) * \
+		(fdf->map_size.x * fdf->map_size.y + 1));
 	if (!fdf->coords || !fdf->color || !fdf->height_colors)
 	{
 		if (fdf->coords)
@@ -37,35 +40,36 @@ char *init(char *map, t_fdf *fdf)
 			free(fdf->height_colors);
 		return (ERROR_MALLOC);
 	}
-    max[0] = fdf->map_size.x;
-    max[1] = fdf->map_size.y;
+	max[0] = fdf->map_size.x;
+	max[1] = fdf->map_size.y;
 	set_map(map, fdf->coords, fdf->color, max);
 	return (NULL);
 }
 
-static int count_and_free(char *line, char separator)
+static int	count_and_free(char *line, char separator)
 {
-    char **split;
-    int result;
-    int i;
-    
-    split = ft_split(line, separator);
-    free(line);
-    i = -1;
-    result = 0;
-    while (split[++i])
-    {
-        free(split[i]);
-        result++;
-    }
-    if (split)
-        free(split);
-    return (result);
+	char	**split;
+	int		result;
+	int		i;
+
+	split = ft_split(line, separator);
+	free(line);
+	i = -1;
+	result = 0;
+	while (split[++i])
+	{
+		free(split[i]);
+		result++;
+	}
+	if (split)
+		free(split);
+	return (result);
 }
-static char *get_coords(char *fdf_path, t_points *map_size)
+
+static char	*get_coords(char *fdf_path, t_points *map_size)
 {
-	int fd;
-	char *line;
+	int		fd;
+	char	*line;
 
 	fd = open(fdf_path, O_RDONLY);
 	if (fd < 0)
@@ -90,10 +94,11 @@ static char *get_coords(char *fdf_path, t_points *map_size)
 	close(fd);
 	return (NULL);
 }
-static unsigned int get_color(char *str)
+
+static unsigned int	get_color(char *str)
 {
-    int color;
-	char *base;
+	int		color;
+	char	*base;
 
 	color = 0xFFFFFF;
 	base = "0123456789";
@@ -109,13 +114,14 @@ static unsigned int get_color(char *str)
 	}
 	return (color);
 }
-static void set_map(char *map, t_coords *pos, int *clrs, int *max)
+
+static void	set_map(char *map, t_coords *pos, int *clrs, int *max)
 {
-	int fd;
-	char *line;
-	char **line_split;
-	int x;
-	int y;
+	int		x;
+	int		y;
+	int		fd;
+	char	*line;
+	char	**split;
 
 	fd = open(map, O_RDONLY);
 	y = -1;
@@ -123,15 +129,15 @@ static void set_map(char *map, t_coords *pos, int *clrs, int *max)
 	{
 		line = get_next_line(fd);
 		if (!line)
-			break;
-		line_split = ft_split(line, ' ');
+			break ;
+		split = ft_split(line, ' ');
 		x = -1;
 		while (++x < max[0])
 		{
-			*pos++ = (t_coords){x, y, ft_atoi_base(line_split[x], "0123456789")};
-			*clrs++ = get_color(line_split[x]);
+			*pos++ = (t_coords){x, y, ft_atoi_base(split[x], "0123456789")};
+			*clrs++ = get_color(split[x]);
 		}
-		ft_free_array(line_split);
+		ft_free_array(split);
 		free(line);
 	}
 	pos->x = INT_MIN;
