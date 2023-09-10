@@ -39,7 +39,7 @@ static t_coords	rotate(t_coords point, float angle, int axis)
 	return point;
 }
 
-void apply_rotation(t_coords *coords, t_points direction)
+static void apply_rotation(t_coords *coords, t_points direction)
 {
 	float	angle[2];
 	
@@ -53,7 +53,7 @@ void apply_rotation(t_coords *coords, t_points direction)
 	}
 }
 
-void center_map(t_coords *points, t_points map_size)
+static void center_map(t_coords *points, t_points map_size)
 {
 	while (points->x != INT_MIN)
 	{
@@ -63,7 +63,7 @@ void center_map(t_coords *points, t_points map_size)
 	}
 }
 
-void set_limits(t_coords *coords, t_limits *limits)
+static void set_limits(t_coords *coords, t_limits *limits)
 {
 	limits->min_x = (float)INT_MAX;
 	limits->max_x = (float)INT_MIN;

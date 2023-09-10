@@ -66,9 +66,8 @@ static void initialize_bresenham(t_bresenham *bresenham, t_draw line)
     bresenham->err = bresenham->dx - bresenham->dy;
 }
 
-
 // Function to draw a line using Bresenham's algorithm with color interpolation
-void draw_line(t_fdf *fdf, t_draw line, int c1, int c2)
+static void draw_line(t_fdf *fdf, t_draw line, int c1, int c2)
 {
     t_bresenham bresenham;
     int color;
@@ -99,10 +98,9 @@ void draw_line(t_fdf *fdf, t_draw line, int c1, int c2)
     mlx_pixel_put(fdf->mlx, fdf->win, line.p0.x, line.p0.y, color);
 }
 
-
 static void draw_map(t_fdf *fdf, t_points *pts)
 {
-	t_draw line;
+	t_draw line_to_draw;
 	int i;
 
 	i = 0;
@@ -110,16 +108,16 @@ static void draw_map(t_fdf *fdf, t_points *pts)
 	{
 		if (i % fdf->map_size.x != fdf->map_size.x - 1)
 		{
-			line.p0 = (t_points){pts[i].x, pts[i].y};
-			line.p1 = (t_points){pts[i + 1].x, pts[i + 1].y};
-			draw_line(fdf, line, fdf->colors[i], fdf->colors[i + 1]);
+			line_to_draw.p0 = (t_points){pts[i].x, pts[i].y};
+			line_to_draw.p1 = (t_points){pts[i + 1].x, pts[i + 1].y};
+			draw_line(fdf, line_to_draw, fdf->colors[i], fdf->colors[i + 1]);
 		}
 		if (i + fdf->map_size.x < fdf->map_size.x * fdf->map_size.y)
 		{
-			line.p0 = (t_points){pts[i].x, pts[i].y};
-			line.p1 = (t_points){pts[i + fdf->map_size.x].x,
+			line_to_draw.p0 = (t_points){pts[i].x, pts[i].y};
+			line_to_draw.p1 = (t_points){pts[i + fdf->map_size.x].x,
 								pts[i + fdf->map_size.x].y};
-			draw_line(fdf, line, fdf->colors[i],
+			draw_line(fdf, line_to_draw, fdf->colors[i],
 					fdf->colors[i + fdf->map_size.x]);
 		}
 		i++;

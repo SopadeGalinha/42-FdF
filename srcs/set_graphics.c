@@ -1,6 +1,6 @@
 #include "../includes/fdf.h"
 
-void set_zoom(t_fdf *fdf)
+static void set_zoom(t_fdf *fdf)
 {
 	float zoom;
 	float sizes[3];

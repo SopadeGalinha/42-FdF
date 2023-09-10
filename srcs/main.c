@@ -12,30 +12,6 @@
 
 #include "../includes/fdf.h"
 
-int key_down(int keycode, t_fdf *fdf)
-{
-	if (keycode == 0xFF1B)
-		close_app(fdf);
-	return (0);
-}
-
-void set_hooks(t_fdf fdf)
-{
-	mlx_hook(fdf.win, KeyPress, KeyPressMask, key_down, &fdf);
-}
-
-void close_app(t_fdf *fdf)
-{
-	mlx_loop_end(fdf->mlx);
-	mlx_destroy_window(fdf->mlx, fdf->win);
-	mlx_destroy_display(fdf->mlx);
-	free(fdf->mlx);
-	free(fdf->coords);
-	free(fdf->color);
-	free(fdf->height_colors);
-	exit(0);
-}
-
 int main(int ac, char **av)
 {
 	t_fdf fdf;
@@ -50,7 +26,7 @@ int main(int ac, char **av)
 	set_display(&fdf);
 	set_graphics(&fdf);
 	render(&fdf);
-	set_hooks(fdf);
+//	set_hooks(fdf);
 	mlx_loop(fdf.mlx);
 	return (0);
 }

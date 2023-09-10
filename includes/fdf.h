@@ -13,34 +13,28 @@
 #ifndef FDF_H
 # define FDF_H
 
-# include "./minilibx/mlx.h"
-# include "./libft/libft.h"
-# include <X11/Xlib.h>
 # include <math.h>
 # include <stdio.h>
 # include <stdlib.h>
-# include <fcntl.h>
 # include <limits.h>
 # include <stdbool.h>
+# include "./minilibx/mlx.h"
+# include "./libft/libft.h"
 
 # define PI 3.14159265358979323846
 
-# define ERROR_MAP		"Found wrong line length. Exiting.\n"
-# define ERROR_EXT		"ERROR file extension. Exiting.\n"
-# define ERROR_INPUT	"ERROR input. Exiting.\n"
-# define ERROR_MALLOC	"malloc error. Exiting.\n"
-# define ERROR_OPEN		"open error\n"
-# define ERROR_EMP_FD	"empty file\n"
+# define ERROR_MAP		"Error: Found wrong line length. Exiting.\n"
+# define ERROR_EXT		"Error: file extension. Exiting.\n"
+# define ERROR_INPUT	"Error: input. Exiting.\n"
+# define ERROR_MALLOC	"Error: malloc. Exiting.\n"
+# define ERROR_OPEN		"Error: open\n"
+# define ERROR_EMP_FD	"Error: Empty file\n"
 
 enum e_rotation
 {
 	AXIS_X,
-	AXIS_Z
-};
-
-enum e_position
-{
-	X,
+	AXIS_Z,
+	X = 0,
 	Y,
 	Z
 };
@@ -73,57 +67,40 @@ typedef struct s_bresenham {
 	int	e2;
 }				t_bresenham;
 
-typedef struct s_limits {
+typedef struct s_limits
+ {
 	float	min_x;
 	float	max_x;
-
 	float	min_y;
 	float	max_y;
-
 	float	min_z;
 	float	max_z;
 }				t_limits;
 
-typedef struct s_fdf {
+typedef struct s_fdf
+{
 	void		*mlx;
-	t_points	offset;
 	void		*win;
 	float		zoom;
-	t_coords	*coords;
 	int			*colors;
 	int			*color;
-	int			*height_colors;
-	t_points	map_size;
-	t_limits	limits;
 	int			window_width;
 	int			window_height;
+	int			*height_colors;
+	t_limits	limits;
+	t_points	offset;
+	t_points	map_size;
+	t_coords	*coords;
 }				t_fdf;
 
-void ft_free_array(char **split_ptr);
-int			list_length(char **list);
-int			points_in_line(char	*line);
-int			ft_strpos(char *str, char c);
-int	ft_atoi_base(const char *nptr, const char *base);
-void	set_graphics(t_fdf *fdf);
-
-void    set_display(t_fdf *fdf);
-
-void		set_limits(t_coords *points, t_limits *object_limits);
-void		initialize_zoom(t_fdf *fdf);
-void		adjust_pivot(t_coords *points, t_points map_size);
-void		create_height_colors(t_fdf fdf);
-char		*init(char *map, t_fdf *fdf);
-
-int			interpolate_color(int color1, int color2, float t);
-
-void		apply_rotation(t_coords *points3d, t_points direction);
-void		switch_projection(t_fdf *fdf);
-void		switch_colors(t_fdf *fdf);
-void		close_app(t_fdf *fdf);
+void	ft_free_array(char **split_ptr);
 size_t	ft_count_char(char *str, char c);
+int		ft_atoi_base(const char *nptr, const char *base);
 bool	ft_contains(const char *haystack, const char *needle);
 
-void		draw_line(t_fdf *fdf, t_draw line, int c1, int c2);
-void		 render(t_fdf *fdf);
+void	render(t_fdf *fdf);
+void    set_display(t_fdf *fdf);
+void	set_graphics(t_fdf *fdf);
+char	*init(char *map, t_fdf *fdf);
 
 #endif
