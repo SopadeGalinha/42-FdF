@@ -1,27 +1,14 @@
-﻿# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/09/09 17:25:39 by jhoonca           #+#    #+#              #
-#    Updated: 2023/09/11 22:10:18 by jhoonca          ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
-.ONESHELL:
-# .SILENT:
+﻿.ONESHELL:
 
 NAME = fdf
 
-SRCS_DIR	= srcs/
-OBJS_DIR	= srcs/objs/
-LIBFT_DIR	= includes/libft/
-MLX_DIR		= includes/minilibx/
+SRCS_DIR = srcs/
+OBJS_DIR = srcs/objs/
+LIBFT_DIR = includes/libft/
+MLX_DIR = includes/minilibx/
 
 SRCS_LIST = main.c init.c init_utils.c \
-			set_display.c set_graphics.c render.c draw.c
+            set_display.c set_graphics.c render.c draw.c
 
 SRCS = $(addprefix $(SRCS_DIR), $(SRCS_LIST))
 OBJS = $(addprefix $(OBJS_DIR), $(SRCS_LIST:.c=.o))
@@ -32,6 +19,8 @@ MLX = $(addprefix $(MLX_DIR), libmlx.a)
 CC = cc
 RM = rm -rf
 CFLAGS = -g # -Wall -Wextra -Werror
+
+COMMIT_MESSAGE = "auto commit"
 
 all: $(NAME)
 
@@ -61,10 +50,14 @@ fclean: clean
 
 re: fclean all
 
-git: fclean
+git:
+ifdef MESSAGE
+	$(eval COMMIT_MESSAGE = "$(MESSAGE)")
+endif
 	git add .
-	git commit -m "auto commit"
+	git commit -m $(COMMIT_MESSAGE)
 	git push
+
 norm:
 	norminette $(SRCS) includes/*.h
 .PHONY: all clean fclean re git norm
