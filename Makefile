@@ -51,8 +51,8 @@ fclean: clean
 re: fclean all
 
 git:
-ifdef MESSAGE
-	$(eval COMMIT_MESSAGE = "$(MESSAGE)")
+ifdef COMMIT
+	$(eval COMMIT_MESSAGE = "$(COMMIT)")
 endif
 	git add .
 	git commit -m $(COMMIT_MESSAGE)
