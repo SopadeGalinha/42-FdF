@@ -6,7 +6,7 @@
 /*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/09 23:30:29 by jhoonca           #+#    #+#             */
-/*   Updated: 2023/09/10 22:09:20 by jhoonca          ###   ########.fr       */
+/*   Updated: 2023/09/11 19:49:52 by jhoonca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@
 // MACROS
 
 # define PI				3.14159265358979323846
+# define DBASE			"0123456789"
+# define HBASE			"0123456789abcdef"
 # define ERROR_OPEN		"Error: open\n"
 # define ERROR_EMP_FD	"Error: Empty file\n"
 # define ERROR_INPUT	"Error: input. Exiting.\n"
@@ -36,7 +38,6 @@
 # define ERROR_MAP		"Error: Found wrong line length. Exiting.\n"
 
 /*____________________________________________________________________________*/
-
 
 //Structs
 typedef struct s_points {
@@ -48,7 +49,6 @@ typedef struct s_coords {
 	float	x;
 	float	y;
 	float	z;
-	int		color;
 }				t_coords;
 
 typedef struct s_draw {
@@ -104,14 +104,14 @@ enum e_state
 	R2,
 	G2,
 	B2,
-	ESC = 65307,
 };
 
 //Prototypes
-void	render(t_fdf *fdf);
+char	*init(char *map, t_fdf *fdf);
 void	set_display(t_fdf *fdf);
 void	set_graphics(t_fdf *fdf);
-char	*init(char *map, t_fdf *fdf);
+void	render(t_fdf *fdf);
+void	draw_map(t_fdf *fdf, t_points *pts);
 
 void	ft_free_array(char **split_ptr);
 size_t	ft_count_char(char *str, char c);
