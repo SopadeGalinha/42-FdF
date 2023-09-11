@@ -6,7 +6,7 @@
 /*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 21:24:32 by jhoonca           #+#    #+#             */
-/*   Updated: 2023/09/11 22:07:58 by jhoonca          ###   ########.fr       */
+/*   Updated: 2023/09/11 23:46:12 by jhoonca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,12 @@ int	keycode(int keycode, t_fdf *fdf)
 	printf("keycode: %d\n", keycode);
 	if (keycode == 0xFF1B)
 		mlx_loop_end(fdf->mlx);
+	if (keycode == 0x63)
+	{
+		// fdf->colors = fdf->colors == fdf->original_colors
+			// ? fdf->height_colors : fdf->original_colors;
+		// refresh_image(fdf);
+	}
 	return (0);
 }
 
