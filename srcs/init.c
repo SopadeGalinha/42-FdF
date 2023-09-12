@@ -6,7 +6,7 @@
 /*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/09 20:00:48 by jhoonca           #+#    #+#             */
-/*   Updated: 2023/09/11 22:09:02 by jhoonca          ###   ########.fr       */
+/*   Updated: 2023/09/12 20:34:50 by jhoonca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static void	set_map(t_fdf *fdf, int fd)
 
 	xy[Y] = -1;
 	ps = fdf->coords;
-	clrs = fdf->color;
+	clrs = fdf->original_colors;
 	while (++xy[Y] < fdf->map_size.y)
 	{
 		line = get_next_line(fd);
@@ -56,12 +56,12 @@ char	*init(char *map, t_fdf *fdf)
 		return (ERROR_MAP);
 	total_elements = fdf->map_size.x * fdf->map_size.y + 1;
 	fdf->coords = malloc(sizeof(t_coords) * total_elements);
-	fdf->color = malloc(sizeof(int) * total_elements);
+	fdf->original_colors = malloc(sizeof(int) * total_elements);
 	fdf->height_colors = malloc(sizeof(int) * total_elements);
-	if (!fdf->coords || !fdf->color || !fdf->height_colors)
+	if (!fdf->coords || !fdf->original_colors || !fdf->height_colors)
 	{
 		free(fdf->coords);
-		free(fdf->color);
+		free(fdf->original_colors);
 		free(fdf->height_colors);
 		return (ERROR_MALLOC);
 	}

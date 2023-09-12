@@ -6,7 +6,7 @@
 /*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/09 22:57:38 by jhoonca           #+#    #+#             */
-/*   Updated: 2023/09/11 20:49:36 by jhoonca          ###   ########.fr       */
+/*   Updated: 2023/09/12 21:32:13 by jhoonca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,6 @@ static void	set_limits(t_coords *coords, t_limits *limits)
 void	set_display(t_fdf *fdf)
 {
 	center_map(fdf->coords, fdf->map_size);
-	apply_rotation(fdf->coords, (t_points){45, 35});
+	apply_rotation(fdf->coords, (t_points){40, 33});
 	set_limits(fdf->coords, &fdf->limits);
 }

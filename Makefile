@@ -9,8 +9,9 @@ LIBFT_DIR = includes/libft/
 MLX_DIR = includes/minilibx/
 COMMIT_MESSAGE = "auto commit"
 
-SRCS_LIST = main.c init.c init_utils.c \
-            set_display.c set_graphics.c render.c draw.c
+SRCS_LIST = main.c init.c init_utils.c set_display.c \
+			set_graphics.c render.c draw.c keycode.c \
+			mousecode.c
 
 SRCS = $(addprefix $(SRCS_DIR), $(SRCS_LIST))
 OBJS = $(addprefix $(OBJS_DIR), $(SRCS_LIST:.c=.o))

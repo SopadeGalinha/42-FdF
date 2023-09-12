@@ -6,7 +6,7 @@
 /*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/09 23:30:29 by jhoonca           #+#    #+#             */
-/*   Updated: 2023/09/11 23:58:12 by jhoonca          ###   ########.fr       */
+/*   Updated: 2023/09/12 21:56:02 by jhoonca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,8 @@ typedef struct s_fdf
 	void		*mlx;
 	void		*win;
 	float		zoom;
+	int			*original_colors;
 	int			*colors;
-	int			*color;
 	int			window_width;
 	int			window_height;
 	int			*height_colors;
@@ -105,6 +105,19 @@ enum e_state
 	G2,
 	B2,
 };
+		
+enum keycodes
+{
+	LEFT_A = 0x61,
+	DOWN_S = 0x73,
+	RIGHT_D = 0x64,
+	UP_W = 0x77,
+	ESC = 0xFF1B,
+	LEFT_ARROW = 0xff51,
+	DOWN_ARROW = 0xff54,
+	RIGHT_ARROW = 0xff53,
+	UP_ARROW = 0xff52,
+};
 
 //Prototypes
 char	*init(char *map, t_fdf *fdf);
@@ -117,5 +130,9 @@ void	ft_free_array(char **split_ptr);
 size_t	ft_count_char(char *str, char c);
 int		ft_atoi_base(const char *nptr, const char *base);
 bool	ft_contains(const char *haystack, const char *needle);
+
+int	keycode(int keycode, t_fdf *fdf);
+int	mousecode(int button, int x, int y, t_fdf *fdf);
+
 
 #endif
