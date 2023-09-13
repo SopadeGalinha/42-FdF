@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   keycode.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
+/*   By: jhogonca <jhogonca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 19:59:24 by jhoonca           #+#    #+#             */
-/*   Updated: 2023/09/12 22:09:51 by jhoonca          ###   ########.fr       */
+/*   Updated: 2023/09/13 18:44:59 by jhogonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,17 @@ void	moves_wasd(t_fdf *fdf, int keycode)
 	i = -1;
 	if (keycode == LEFT_A || keycode == LEFT_ARROW)
 		while (fdf->coords[++i].x != INT_MIN)
-			fdf->coords[i].x -= 3;
+			fdf->coords[i].x -= 5;
 	if (keycode == RIGHT_D || keycode == RIGHT_ARROW)
 		while (fdf->coords[++i].x != INT_MIN)
-			fdf->coords[i].x += 3;
+			fdf->coords[i].x += 5;
 	if (keycode == UP_ARROW || keycode == UP_W)
 		while (fdf->coords[++i].x != INT_MIN)
-			fdf->coords[i].z += 3;
+			fdf->coords[i].z += 5;
 	if (keycode == DOWN_ARROW || keycode == DOWN_S)
 		while (fdf->coords[++i].x != INT_MIN)
-			fdf->coords[i].z -= 3;
-	mlx_clear_window(fdf->mlx, fdf->win);
+			fdf->coords[i].z -= 5;
+	// mlx_clear_window(fdf->mlx, fdf->win);
 	render(fdf);
 }
 

@@ -6,7 +6,7 @@
 /*   By: jhogonca <jhogonca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/09 23:30:29 by jhoonca           #+#    #+#             */
-/*   Updated: 2023/09/13 17:58:07 by jhogonca         ###   ########.fr       */
+/*   Updated: 2023/09/13 21:16:30 by jhogonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,12 @@ typedef struct s_limits{
 	float	max_z;
 }				t_limits;
 
+typedef struct s_image {
+	int		bits_per_pixel;
+	int		size_line;
+	int		endian;
+	char	*buffer;
+}	t_image;
 typedef struct s_fdf
 {
 	void		*mlx;
@@ -79,6 +85,7 @@ typedef struct s_fdf
 	t_points	offset;
 	t_points	map_size;
 	t_coords	*coords;
+	t_image		*data;
 }				t_fdf;
 
 //Enums
@@ -126,7 +133,7 @@ char	*init(char *map, t_fdf *fdf);
 void	set_display(t_fdf *fdf);
 void	set_graphics(t_fdf *fdf);
 void	render(t_fdf *fdf);
-void	draw_map(t_fdf *fdf, t_points *pts);
+void	draw_map(t_fdf *fdf, t_points *pts, t_image *data);
 
 void	ft_free_array(char **split_ptr);
 size_t	ft_count_char(char *str, char c);

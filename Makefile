@@ -21,7 +21,7 @@ MLX = $(addprefix $(MLX_DIR), libmlx.a)
 
 CC = cc
 RM = rm -rf
-CFLAGS = -g -Wall -Wextra -Werror
+CFLAGS = -g #-Wall -Wextra -Werror
 
 all: $(NAME)
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
+/*   By: jhogonca <jhogonca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 21:24:32 by jhoonca           #+#    #+#             */
-/*   Updated: 2023/09/13 17:36:09 by jhoonca          ###   ########.fr       */
+/*   Updated: 2023/09/13 21:30:07 by jhogonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	set_hooks(t_fdf *fdf)
 {
 	mlx_key_hook(fdf->win, keycode, fdf);
 	mlx_mouse_hook(fdf->win, mousecode, fdf);
+	mlx_hook(fdf->mlx, 04, (1L<<2), mousecode, fdf);
 	mlx_hook(fdf->win, 17, 1L << 15, mlx_loop_end, fdf->mlx);
 }
 
