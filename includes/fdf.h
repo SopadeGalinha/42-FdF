@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fdf.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
+/*   By: jhogonca <jhogonca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/09 23:30:29 by jhoonca           #+#    #+#             */
-/*   Updated: 2023/09/12 21:56:02 by jhoonca          ###   ########.fr       */
+/*   Updated: 2023/09/13 17:58:07 by jhogonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,8 @@ enum keycodes
 	DOWN_ARROW = 0xff54,
 	RIGHT_ARROW = 0xff53,
 	UP_ARROW = 0xff52,
+	ON_PRESS = 1L<<15,
+	ON_RELEASE = 1L<<1,
 };
 
 //Prototypes
