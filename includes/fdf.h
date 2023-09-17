@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fdf.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhogonca <jhogonca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jhogonca <jhogonca@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/09 23:30:29 by jhoonca           #+#    #+#             */
-/*   Updated: 2023/09/13 21:16:30 by jhogonca         ###   ########.fr       */
+/*   Updated: 2023/09/17 03:54:20 by jhogonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,8 +112,8 @@ enum e_state
 	G2,
 	B2,
 };
-		
-enum keycodes
+
+enum e_keycodes
 {
 	LEFT_A = 0x61,
 	DOWN_S = 0x73,
@@ -140,8 +140,7 @@ size_t	ft_count_char(char *str, char c);
 int		ft_atoi_base(const char *nptr, const char *base);
 bool	ft_contains(const char *haystack, const char *needle);
 
-int	keycode(int keycode, t_fdf *fdf);
-int	mousecode(int button, int x, int y, t_fdf *fdf);
-
+int		keycode(int keycode, t_fdf *fdf);
+int		mousecode(int button, int x, int y, t_fdf *fdf);
 
 #endif

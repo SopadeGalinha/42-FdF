@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhogonca <jhogonca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jhogonca <jhogonca@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 21:24:32 by jhoonca           #+#    #+#             */
-/*   Updated: 2023/09/13 21:30:07 by jhogonca         ###   ########.fr       */
+/*   Updated: 2023/09/17 03:52:52 by jhogonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,7 @@ void	set_hooks(t_fdf *fdf)
 {
 	mlx_key_hook(fdf->win, keycode, fdf);
 	mlx_mouse_hook(fdf->win, mousecode, fdf);
-	mlx_hook(fdf->mlx, 04, (1L<<2), mousecode, fdf);
-	mlx_hook(fdf->win, 17, 1L << 15, mlx_loop_end, fdf->mlx);
+	mlx_hook(fdf->win, 17, 1L << 17, mlx_loop_end, fdf->mlx);
 }
 
 int	main(int ac, char **av)

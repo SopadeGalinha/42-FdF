@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   set_display.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhogonca <jhogonca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jhogonca <jhogonca@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/09 22:57:38 by jhoonca           #+#    #+#             */
-/*   Updated: 2023/09/13 21:23:32 by jhogonca         ###   ########.fr       */
+/*   Updated: 2023/09/17 03:40:11 by jhogonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,6 @@ static void	set_limits(t_coords *coords, t_limits *limits)
 void	set_display(t_fdf *fdf)
 {
 	center_map(fdf->coords, fdf->map_size);
-	apply_rotation(fdf->coords, (t_points){45, 35});
+	apply_rotation(fdf->coords, (t_points){45, 34});
 	set_limits(fdf->coords, &fdf->limits);
 }

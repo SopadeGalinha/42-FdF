@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhogonca <jhogonca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jhogonca <jhogonca@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 21:47:02 by jhoonca           #+#    #+#             */
-/*   Updated: 2023/09/13 19:43:10 by jhogonca         ###   ########.fr       */
+/*   Updated: 2023/09/17 03:56:15 by jhogonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,14 @@ static void	isometric_projection(t_fdf fdf, t_points *points_to_draw)
 
 void	render(t_fdf *fdf)
 {
-	t_points	*points_to_draw;
 	void		*image;
 	t_image		data;
+	t_points	*points_to_draw;
 
 	data.endian = 0;
 	image = mlx_new_image(fdf->mlx, fdf->window_width, fdf->window_height);
-	data.buffer = mlx_get_data_addr(image, &data.bits_per_pixel, &data.size_line, &data.endian);
+	data.buffer = mlx_get_data_addr(image, &data.bits_per_pixel, \
+		&data.size_line, &data.endian);
 	points_to_draw = malloc(sizeof(t_points) * \
 		(fdf->map_size.x * fdf->map_size.y + 1));
 	isometric_projection(*fdf, points_to_draw);

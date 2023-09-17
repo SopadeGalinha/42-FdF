@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhogonca <jhogonca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jhogonca <jhogonca@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 19:44:50 by jhoonca           #+#    #+#             */
-/*   Updated: 2023/09/13 19:38:15 by jhogonca         ###   ########.fr       */
+/*   Updated: 2023/09/17 03:59:26 by jhogonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,6 @@ static void	bresenham(t_draw *line, int *state)
 	}
 }
 
-// Move right
-// Move left
-// Move down
-// Move up
-// Initialize the error term
 static void	init_bresenham(t_draw line, int *state)
 {
 	state[DELTA_X] = abs(line.p1.x - line.p0.x);
@@ -75,24 +70,25 @@ static void	init_bresenham(t_draw line, int *state)
 
 void	ft_pixel_put(t_fdf *fdf, int x, int y, int color, t_image *data)
 {
+	int	pixel;
+
 	if (x < 0 || x >= fdf->window_width || y < 0 || y >= fdf->window_height)
 		return ;
-	int pixel = (y * data->size_line) + (x * 4);
-	
-	if (data->endian)        // Most significant (Alpha) byte first
-    {
-        data->buffer[pixel + 0] = (color >> 24);
-        data->buffer[pixel + 1] = (color >> 16) & 0xFF;
-        data->buffer[pixel + 2] = (color >> 8) & 0xFF;
-        data->buffer[pixel + 3] = (color) & 0xFF;
-    }
-    else if (!data->endian)   // Least significant (Blue) byte first
-    {
-        data->buffer[pixel + 0] = (color) & 0xFF;
-        data->buffer[pixel + 1] = (color >> 8) & 0xFF;
-     	data->buffer[pixel + 2] = (color >> 16) & 0xFF;
-        data->buffer[pixel + 3] = (color >> 24);
-    }
+	pixel = (y * data->size_line) + (x * 4);
+	if (data->endian)
+	{
+		data->buffer[pixel + 0] = (color >> 24);
+		data->buffer[pixel + 1] = (color >> 16) & 0xFF;
+		data->buffer[pixel + 2] = (color >> 8) & 0xFF;
+		data->buffer[pixel + 3] = (color) & 0xFF;
+	}
+	else if (!data->endian)
+	{
+		data->buffer[pixel + 0] = (color) & 0xFF;
+		data->buffer[pixel + 1] = (color >> 8) & 0xFF;
+		data->buffer[pixel + 2] = (color >> 16) & 0xFF;
+		data->buffer[pixel + 3] = (color >> 24);
+	}
 }
 
 // Function to draw a line using Bresenham's algorithm with color interpolation
@@ -128,7 +124,8 @@ void	draw_map(t_fdf *fdf, t_points *pts, t_image *data)
 		{
 			line_to_draw.p0 = (t_points){pts[i].x, pts[i].y};
 			line_to_draw.p1 = (t_points){pts[i + 1].x, pts[i + 1].y};
-			draw_line(fdf, line_to_draw, fdf->colors[i], fdf->colors[i + 1], data);
+			draw_line(fdf, line_to_draw, \
+				fdf->colors[i], fdf->colors[i + 1], data);
 		}
 		if (i + fdf->map_size.x < fdf->map_size.x * fdf->map_size.y)
 		{
