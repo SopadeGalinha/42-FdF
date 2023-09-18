@@ -6,7 +6,7 @@
 /*   By: jhogonca <jhogonca@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/09 23:30:29 by jhoonca           #+#    #+#             */
-/*   Updated: 2023/09/17 03:54:20 by jhogonca         ###   ########.fr       */
+/*   Updated: 2023/09/18 18:17:44 by jhogonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,5 +142,6 @@ bool	ft_contains(const char *haystack, const char *needle);
 
 int		keycode(int keycode, t_fdf *fdf);
 int		mousecode(int button, int x, int y, t_fdf *fdf);
+int		interpolate_color(int color1, int color2, float progress);
 
 #endif

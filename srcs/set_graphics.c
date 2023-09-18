@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   set_graphics.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhoonca <jhogonca@student.42porto.com>     +#+  +:+       +#+        */
+/*   By: jhogonca <jhogonca@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 21:46:13 by jhoonca           #+#    #+#             */
-/*   Updated: 2023/09/12 20:35:16 by jhoonca          ###   ########.fr       */
+/*   Updated: 2023/09/17 05:34:49 by jhogonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ void	set_graphics(t_fdf *fdf)
 {
 	fdf->mlx = mlx_init();
 	mlx_get_screen_size(fdf->mlx, &(fdf->window_width), &(fdf->window_height));
-	fdf->window_width = fdf->window_width / 1.5;
-	fdf->window_height = fdf->window_width / 1.5 ;
+	fdf->window_width = fdf->window_width / 2;
+	fdf->window_height = fdf->window_width / 2;
 	fdf->offset = (t_points){(fdf->window_width / 2), (fdf->window_width / 3)};
 	fdf->colors = fdf->original_colors;
 	fdf->win = mlx_new_window(fdf->mlx, fdf->window_width, \

@@ -25,13 +25,11 @@ CFLAGS = -g #-Wall -Wextra -Werror
 
 all: $(NAME)
 
-
-
 $(NAME): $(OBJS) $(LIBFT) $(MLX)
 	$(CC) $(CFLAGS) $(OBJS) -L$(LIBFT_DIR) -lft -L$(MLX_DIR) -lmlx -lX11 -lXext -lm -o $(NAME)
 	@echo "\033[1;36m[ ✔ ] creating $(NAME)...\033[0m"
 	@echo "\033[1;32m[ ✔ ] $(NAME) ready!\033[0m"
-	@echo "\033[1;3;5;33m 		- Let the journey begin! 🚀🗺️	\nUnleash the map's secrets with: ./fdf <map_file>\n\033[0m"
+	@echo "\033[1;3;5;33m 	- Let the journey begin! 🚀🗺️	\nUnleash the map's secrets with: ./fdf <map_file>\n\033[0m"
 
 $(OBJS_DIR)%.o: $(SRCS_DIR)%.c | $(OBJS_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -64,8 +62,8 @@ norm:
 	norminette $(SRCS) includes/*.h
 
 git:
-ifdef COMMIT
-	$(eval COMMIT_MESSAGE = "$(COMMIT)")
+ifdef M
+	$(eval COMMIT_MESSAGE = "$(M)")
 endif
 	git add .
 	git commit -m $(COMMIT_MESSAGE)
