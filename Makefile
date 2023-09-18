@@ -61,7 +61,7 @@ re: fclean all
 norm:
 	norminette $(SRCS) includes/*.h
 
-git:
+git: fclean
 ifdef M
 	$(eval COMMIT_MESSAGE = "$(M)")
 endif
