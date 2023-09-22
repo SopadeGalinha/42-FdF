@@ -21,7 +21,7 @@ MLX = $(addprefix $(MLX_DIR), libmlx.a)
 
 CC = cc
 RM = rm -rf
-CFLAGS = -g #-Wall -Wextra -Werror
+CFLAGS = -g -Wall -Wextra -Werror
 
 all: $(NAME)
 
@@ -59,7 +59,7 @@ fclean: clean
 re: fclean all
 
 norm:
-	norminette $(SRCS) includes/*.h
+	norminette $(SRCS) includes/*.h $(LIBFT_DIR)*.c $(LIBFT_DIR)*.h
 
 git: fclean
 ifdef M

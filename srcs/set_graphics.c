@@ -6,7 +6,7 @@
 /*   By: jhogonca <jhogonca@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 21:46:13 by jhoonca           #+#    #+#             */
-/*   Updated: 2023/09/17 05:34:49 by jhogonca         ###   ########.fr       */
+/*   Updated: 2023/09/22 18:09:14 by jhogonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	set_graphics(t_fdf *fdf)
 {
 	fdf->mlx = mlx_init();
 	mlx_get_screen_size(fdf->mlx, &(fdf->window_width), &(fdf->window_height));
-	fdf->window_width = fdf->window_width / 2;
+	fdf->window_width = fdf->window_width / 1.7;
 	fdf->window_height = fdf->window_width / 2;
 	fdf->offset = (t_points){(fdf->window_width / 2), (fdf->window_width / 3)};
 	fdf->colors = fdf->original_colors;
